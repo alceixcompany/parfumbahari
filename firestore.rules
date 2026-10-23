@@ -1,0 +1,107 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && (request.auth.uid == 'ldB7qeNI85UX0vxdKRbcUAxcNiS2'
+          || (exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+            && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.isAdmin == true));
+    }
+
+    function validText(value, maxLength) {
+      return value is string && value.size() > 0 && value.size() <= maxLength;
+    }
+
+    // Optimized photos have immutable IDs and are saved with their content in one batch.
+    match /media/{docId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if isAdmin()
+        && docId.matches('[a-f0-9-]{36}')
+        && request.resource.data.keys().hasOnly(['data', 'contentType', 'width', 'height', 'createdAt'])
+        && request.resource.data.data is bytes
+        && request.resource.data.data.size() > 0
+        && request.resource.data.data.size() <= 700 * 1024
+        && request.resource.data.contentType in ['image/webp', 'image/jpeg']
+        && request.resource.data.width is int
+        && request.resource.data.width > 0 && request.resource.data.width <= 2400
+        && request.resource.data.height is int
+        && request.resource.data.height > 0 && request.resource.data.height <= 2400
+        && validText(request.resource.data.createdAt, 30);
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    // Parfüm kataloğu: taslakları yalnızca yöneticiler görebilir.
+    match /products/{docId} {
+      allow read: if isAdmin() || resource.data.isActive == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Blog yazıları: yalnızca aktif içerikler herkese açıktır.
+    match /haberler/{docId} {
+      allow read: if isAdmin() || resource.data.isActive == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Galeri verileri: ziyaretçiler yalnızca aktif kayıtları okuyabilir.
+    match /gallery_categories/{docId} {
+      allow read: if isAdmin() || resource.data.isActive == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /gallery_items/{docId} {
+      allow read: if isAdmin() || resource.data.isActive == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /hizmet_bolgeleri/{docId} {
+      allow read: if isAdmin() || resource.data.isActive == true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /contact_info/{docId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // İletişim formu kaldırıldı. Önceki kayıtlar yalnızca yöneticilere açıktır.
+    match /contact_messages/{docId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if false;
+    }
+
+    match /newsletter_subscriptions/{docId} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'createdAt', 'isActive', 'source'])
+        && validText(request.resource.data.email, 254)
+        && request.resource.data.isActive == true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Sayaç yalnızca birer artırılabilir; keyfi veri yazılamaz.
+    match /call_counter/{docId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['count', 'updatedAt'])
+        && request.resource.data.count == 1;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['count', 'updatedAt'])
+        && request.resource.data.count == resource.data.count + 1;
+      allow delete: if isAdmin();
+    }
+
+    // Admin yetkisi Firebase Authentication UID'sine bağlıdır.
+    match /admins/{docId} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == docId);
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

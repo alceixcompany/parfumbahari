@@ -1,0 +1,6 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "media", "fieldPath": "data", "indexes": [] }
+  ]
+}

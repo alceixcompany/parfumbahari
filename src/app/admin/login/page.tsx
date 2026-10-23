@@ -1,0 +1,16 @@
+'use client';
+import { useState, type FormEvent } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FiArrowLeft, FiArrowUpRight, FiEye, FiEyeOff, FiLock } from 'react-icons/fi';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { loginUser } from '@/store/slices/authSlice';
+import BrandMark from '@/components/BrandMark';
+function loginMessage(error: string) { if (/invalid-credential|user-not-found|wrong-password/.test(error)) return 'E-posta veya şifre hatalı. Lütfen yeniden deneyin.'; if (/too-many-requests/.test(error)) return 'Çok fazla giriş denemesi yapıldı. Bir süre sonra yeniden deneyin.'; if (/operation-not-allowed/.test(error)) return 'Firebase Authentication içinde E-posta/Şifre giriş yöntemini etkinleştirin.'; if (/network-request-failed/.test(error)) return 'Firebase bağlantısı kurulamadı. İnternet bağlantınızı kontrol edin.'; if (/permission-denied/.test(error)) return 'Hesabın yönetici kaydı veya Firebase kuralları doğrulanamadı.'; return error; }
+export default function AdminLogin() {
+  const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [show, setShow] = useState(false);
+  const dispatch = useAppDispatch(); const { isLoading, error } = useAppSelector(state => state.auth); const router = useRouter();
+  async function submit(e: FormEvent) { e.preventDefault(); try { await dispatch(loginUser({ email: email.trim(), password })).unwrap(); router.replace('/admin'); } catch {} }
+  return <main className="admin-login"><section className="admin-login-visual"><Image src="/parfum-bahari/hero.webp" alt="Parfum Bahari atmosferi" fill priority sizes="55vw" /><div /><Link href="/" aria-label="Parfum Bahari"><BrandMark /></Link><div className="admin-login-caption"><p>PARFUM BAHARI İÇERİK STÜDYOSU</p><h1>İyi bir izlenim,<br /><em>ayrıntıda başlar.</em></h1><span>Hikâyenizi, kokularınızı ve içeriklerinizi tek yerden yönetin.</span></div></section><section className="admin-login-form"><Link href="/" className="admin-back-link"><FiArrowLeft /> Siteye dön</Link><div><p className="admin-eyebrow">PARFUM BAHARI · YÖNETİM</p><h2>Tekrar hoş geldiniz.</h2><p>İçerik stüdyosuna giriş yapın.</p><form onSubmit={submit}><label>E-posta adresi<input type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} placeholder="Yönetici e-posta adresiniz" /></label><label>Şifre<span className="admin-password"><input type={show ? 'text' : 'password'} autoComplete="current-password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="Şifrenizi girin" /><button type="button" onClick={() => setShow(!show)} aria-label={show ? 'Şifreyi gizle' : 'Şifreyi göster'}>{show ? <FiEyeOff /> : <FiEye />}</button></span></label>{error && <p className="admin-error" role="alert">{loginMessage(error)}</p>}<button className="admin-button" disabled={isLoading} type="submit">{isLoading ? 'Giriş yapılıyor…' : 'Yönetim paneline gir'}<FiArrowUpRight /></button></form><div className="admin-login-secure"><FiLock /> Yalnızca yetkili yönetici hesapları erişebilir.</div></div><small>PARFUM BAHARI · BİR KOKU. BİNBİR HİS.</small></section></main>;
+}

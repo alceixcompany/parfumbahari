@@ -1,0 +1,9 @@
+import { pageMetadata, getBreadcrumbSchema } from '@/lib/seo';
+import { PageIntro, DiscoveryBanner } from '@/components/brand/Sections';
+import Journal from '@/components/brand/Journal';
+import { getPublishedPosts } from '@/lib/publicContent';
+export const metadata = pageMetadata({ title: 'Koku Günlüğü — Parfüm Rehberi ve İlham', description: 'Parfüm seçimi, koku notaları, mevsimlere göre parfümler ve saklama önerileri. Parfum Bahari koku günlüğünde yeni hikâyeler keşfedin.', path: '/haberler' });
+export default async function JournalPage() {
+  const posts = await getPublishedPosts();
+  return <main id="main"><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(getBreadcrumbSchema([{ name: 'Koku Günlüğü', path: '/haberler' }])) }} /><PageIntro eyebrow="KOKU GÜNLÜĞÜ" title="Kokunun" emphasis="ötesinde." description="Notalar, küçük ritüeller ve ilham veren hikâyeler. Koku dünyasına biraz daha yakından bakın." />{posts.length ? <Journal posts={posts} full /> : <p className="container empty-page">Yeni hikâyeler yakında burada.</p>}<DiscoveryBanner /></main>;
+}
