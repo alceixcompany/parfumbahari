@@ -1,0 +1,134 @@
+/* Plain system typography, shared by the storefront and management panel. */
+:root,
+body {
+  --font-manrope: Arial;
+  --font-editorial: Arial;
+  --font-sans: Arial, Helvetica, sans-serif;
+  --serif: Arial, Helvetica, sans-serif;
+  --muted: #514a43;
+}
+body { font-family: var(--font-sans); font-size: 16px; line-height: 1.65; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-sans); font-weight: 600; letter-spacing: 0; line-height: 1.3; }
+em, .story-signature, .footer-signature { font-style: normal; }
+h1 em, h2 em { font-weight: inherit; }
+.button, .text-link { font-size: 14px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
+.eyebrow { font-size: 12px; letter-spacing: 1px; font-weight: 600; }
+.announcement { min-height: 36px; height: auto; padding-block: 8px; font-size: 11px; letter-spacing: .6px; }
+.announcement > a { font-size: 11px; }
+.desktop-nav > a { font-size: 14px; font-weight: 500; }
+.mobile-nav > a { font-family: var(--font-sans); font-size: 22px; font-weight: 500; }
+.mobile-nav > a small, .mobile-nav > p { font-size: 13px; }
+
+/* One consistent logo in the header, footer and admin screens. */
+.brand-mark { gap: 11px; }
+.brand-mark .brand-emblem { width: 44px; height: 44px; border-radius: 0; flex-shrink: 0; }
+.brand-mark .brand-wordmark { gap: 4px; }
+.brand-mark .brand-wordmark strong { font-family: var(--font-sans); font-size: 23px; font-weight: 700; line-height: 1.2; letter-spacing: -.4px; }
+.brand-mark .brand-wordmark small { font-size: 9px; line-height: 1.4; letter-spacing: 1px; color: #60564b; }
+.brand-mark-dark .brand-wordmark strong, .brand-mark-dark .brand-wordmark small { color: var(--paper); }
+.brand-artwork { background: #f1ebdf; border: 1px solid var(--line); min-height: 240px; display: flex; flex-direction: column; justify-content: center; padding: 36px; }
+.brand-artwork > img { width: 100%; height: auto; }
+.brand-artwork > span { font-size: 12px; line-height: 1.7; letter-spacing: .5px; color: #514a43; margin-top: 22px; }
+
+.section-heading { flex-wrap: wrap; }
+.section-heading h2, .story-copy h2, .faq-grid h2, .philosophy-grid h2 { font-size: clamp(28px, 3vw, 38px); letter-spacing: 0; line-height: 1.3; }
+.section-heading > .text-link { font-size: 14px; }
+.heading-description, .story-copy > p:not(.eyebrow), .philosophy-grid p:not(.eyebrow) { font-size: 16px; line-height: 1.85; color: var(--muted); }
+.story-signature, .footer-signature { font-family: var(--font-sans); font-size: 19px; line-height: 1.5; }
+.image-side-note { font-size: 11px; letter-spacing: .5px; }
+.values-strip span { font-size: 12px; line-height: 1.5; }
+.discovery-banner h2 { font-size: clamp(28px, 3.5vw, 42px); letter-spacing: 0; line-height: 1.3; }
+.discovery-banner .eyebrow { font-size: 12px; }
+.discovery-banner p:not(.eyebrow) { font-size: 16px; color: #f5e8e5; }
+.discovery-banner .button { font-size: 14px; }
+.page-intro h1 { font-size: clamp(30px, 3.5vw, 44px); line-height: 1.3; letter-spacing: 0; }
+.intro-description { font-size: 16px; line-height: 1.8; }
+.breadcrumbs, .breadcrumbs > span:last-child, .detail-breadcrumb, .detail-breadcrumb > span { font-size: 12px; letter-spacing: 0; line-height: 1.6; }
+
+/* Product names stay readable even when the catalogue contains long names. */
+.product-card .product-title h3, .catalogue-grid .product-title h3 { font-size: 20px; font-weight: 600; line-height: 1.45; letter-spacing: 0; overflow-wrap: anywhere; }
+.product-subtitle { font-size: 14px; line-height: 1.7; }
+.product-badge, .catalogue-grid .product-badge { font-size: 10px; line-height: 1.5; letter-spacing: .3px; max-width: calc(100% - 60px); }
+.product-discover { font-size: 13px; }
+.favourite { width: 34px; height: 34px; font-size: 17px; }
+.catalogue-search input { font-size: 16px; }
+.catalogue-search > span { font-size: 11px; letter-spacing: .7px; }
+.catalogue-toolbar, .catalogue-toolbar > p { font-size: 14px; }
+.catalogue-saved, .catalogue-saved > span, .catalogue-sort select, .catalogue-sort > label { font-size: 13px; }
+.active-filters > span, .active-filters > button { font-size: 13px; }
+.catalogue-empty h2 { font-size: 28px; letter-spacing: 0; }
+.catalogue-empty p { font-size: 16px; }
+.catalogue-footnote { font-size: 13px; line-height: 1.8; }
+.product-detail .product-detail-copy h1 { font-size: clamp(28px, 3vw, 40px); line-height: 1.3; letter-spacing: 0; font-weight: 600; overflow-wrap: anywhere; }
+.product-detail-copy > .eyebrow { font-size: 12px; letter-spacing: 1px; }
+.detail-subtitle { font-family: var(--font-sans); font-size: 18px; line-height: 1.6; }
+.detail-concentration { font-size: 13px; line-height: 1.7; letter-spacing: .5px; color: var(--muted); }
+.detail-description { font-size: 16px; line-height: 1.85; color: #403932; }
+.product-detail-actions { flex-wrap: wrap; gap: 16px 24px; }
+.product-detail-actions .button { font-size: 14px; min-width: 210px; }
+.favourite.labelled span { font-size: 13px; color: var(--muted); }
+.detail-accordions summary { font-size: 15px; font-weight: 600; line-height: 1.65; padding-block: 21px; }
+.detail-accordions > details > p { font-size: 16px; line-height: 1.9; color: #403932; max-width: none; padding-bottom: 24px; overflow-wrap: anywhere; }
+.product-photo-counter { font-size: 13px; }
+
+.journal-card h3, .journal-full .journal-card h3 { font-size: 24px; line-height: 1.4; letter-spacing: 0; }
+.journal-card > p, .article-excerpt { font-size: 16px; line-height: 1.85; }
+.journal-meta, .journal-read { font-size: 12px; }
+.article-header h1 { font-size: clamp(30px, 4vw, 44px); line-height: 1.3; letter-spacing: 0; }
+.article-header .eyebrow, .article-byline { font-size: 13px; }
+.article-body h2, .legal-body h2 { font-size: 26px; line-height: 1.4; letter-spacing: 0; }
+.article-body p, .legal-body p { font-size: 16px; line-height: 1.9; color: #403932; }
+.faq-list summary { font-size: 16px; line-height: 1.65; }
+.faq-list details > p { font-size: 15px; line-height: 1.85; color: var(--muted); }
+.gallery-item h3 { font-size: 20px; line-height: 1.4; }
+.gallery-item > p, .gallery-toolbar button, .gallery-modal p { font-size: 13px; letter-spacing: .3px; }
+.gallery-modal h2 { font-size: 28px; line-height: 1.4; }
+.footer-brand > p, .footer-main nav { font-size: 14px; line-height: 1.8; }
+.footer-label { font-size: 12px; letter-spacing: .5px; }
+.footer-invitation > p:not(.footer-label) { font-size: 20px; line-height: 1.5; }
+.footer-bottom { font-size: 12px; line-height: 1.8; }
+.social-link { font-size: 14px; }
+.footer-invitation > .text-link { font-size: 14px; }
+.philosophy-principles > span { font-size: 15px; line-height: 1.7; }
+.not-found h1, .static-studio h1 { font-size: clamp(30px, 4vw, 46px); line-height: 1.3; letter-spacing: 0; }
+.not-found p:not(.eyebrow), .static-studio > .container > p:not(.eyebrow) { font-size: 16px; }
+
+@media (max-width: 1000px) {
+  .brand-mark .brand-wordmark strong { font-size: 21px; }
+  .brand-mark .brand-emblem { width: 40px; height: 40px; }
+  .desktop-nav { gap: 18px; }
+  .desktop-nav > a { font-size: 13px; }
+  .section-heading > .text-link { white-space: normal; }
+}
+@media (max-width: 760px) {
+  .brand-mark { gap: 9px; }
+  .brand-mark .brand-emblem { width: 38px; height: 38px; }
+  .brand-mark .brand-wordmark strong { font-size: 21px; }
+  .brand-mark .brand-wordmark small { font-size: 8px; letter-spacing: .8px; }
+  .announcement { font-size: 9px; letter-spacing: .5px; min-height: 30px; }
+  .section-heading { display: flex; gap: 20px; }
+  .section-heading > .text-link { font-size: 14px; margin-top: 0; }
+  .section-heading h2, .story-copy h2, .faq-grid h2, .philosophy-grid h2 { font-size: 28px; }
+  .discovery-banner p:not(.eyebrow) { max-width: none; }
+  .product-card .product-title h3, .catalogue-grid .product-title h3 { font-size: 18px; }
+  .product-badge, .catalogue-grid .product-badge { font-size: 10px; }
+  .catalogue-grid .favourite, .favourite { width: 32px; height: 32px; font-size: 16px; }
+  .catalogue-toolbar > p { font-size: 14px; }
+  .catalogue-sort select, .catalogue-saved { font-size: 13px; }
+  .product-detail .product-detail-copy h1 { font-size: 29px; }
+  .product-detail-actions .button { min-width: 210px; font-size: 14px; }
+  .favourite.labelled span { display: inline; font-size: 13px; }
+  .detail-accordions > details > p { font-size: 16px; }
+  .footer-brand .brand-mark .brand-wordmark strong { font-size: 23px; }
+  .footer-main nav, .footer-brand > p { font-size: 14px; }
+  .footer-label, .footer-bottom { font-size: 12px; }
+  .article-body p, .legal-body p { font-size: 16px; }
+}
+@media (max-width: 350px) {
+  .brand-mark .brand-wordmark strong { font-size: 19px; }
+  .brand-mark .brand-emblem { width: 32px; height: 32px; }
+  .brand-mark .brand-wordmark small { font-size: 8px; letter-spacing: .3px; }
+  .brand-mark { gap: 7px; }
+  .header-inner { gap: 8px; }
+  .header-actions { gap: 4px; }
+}

@@ -1,6 +1,12 @@
 # Parfum Bahari — görsel varlıklar
 
-Üretim modu: **yerleşik Imagegen aracı**. Kullanıcının sağladığı logo korunarak `public/parfum-bahari/logo.png` olarak optimize edildi. Küçük simge `public/parfum-bahari/icon.png` ve `src/app/icon.png` konumundadır. Logo yeniden üretilmedi.
+## Güncel logo — 3 Kasım 2026
+
+Logo, okunaklı Arial yazı ve bordo PB ambleminden oluşan SVG olarak yenilendi. Sitede ortak `BrandMark` bileşeni; marka sayfasında `logo-wordmark.svg`; yapılandırılmış veride `logo-wordmark.png`; manifest ve tarayıcı simgesinde `icon-pb.png` / `src/app/icon.png` kullanılır. SVG kaynaklar `public/parfum-bahari/` içindedir. PNG kopyalar Sharp ile SVG kaynaklarından oluşturuldu. Bu logo için görsel üretim aracı kullanılmadı.
+
+## Fotoğraflar
+
+Üretim modu: **yerleşik Imagegen aracı**. İlk tasarımda kullanıcının sağladığı logo `logo.png`, küçük kopyası `icon.png` olarak saklanmıştı; bu iki dosya artık arayüzde kullanılmıyor.
 
 Sekiz görsel, yerel `public/parfum-bahari/` klasöründe WebP olarak saklanır. Kaynak PNG'ler araç tarafından Codex görsel kitaplığına kaydedildi; projedeki görseller bu dış konuma bağımlı değildir. Sharp yalnızca yeniden boyutlandırma ve WebP dönüştürme için kullanıldı. Ürün görselleri ve koku kompozisyonları temsilî koleksiyon konseptleridir.
 

@@ -1,6 +1,6 @@
 # Parfum Bahari
 
-Next.js 16 / React 19 üzerinde, Türkçe bir parfüm markası sitesi. Krem ve bordo renkler, editoryal tipografi ve yerel ürün fotoğrafları kullanır. Mevcut Firebase, Redux ve güvenli yönetici oturumu altyapısı korunmuştur.
+Next.js 16 / React 19 üzerinde, Türkçe bir parfüm markası sitesi. Krem ve bordo renkler, okunaklı Arial sistem tipografisi, PB yazı logosu ve yerel ürün fotoğrafları kullanır. Mevcut Firebase, Redux ve güvenli yönetici oturumu altyapısı korunmuştur.
 
 ## Çalıştırma
 
@@ -28,8 +28,8 @@ Eski İngilizce ve sektör sayfaları ilgili Türkçe sayfalara kalıcı yönlen
 - 4 Türkçe yazı, 6 galeri görseli ve 3 kategori: `src/data/starter-content.json`
 - Marka ve menü: `src/data/brand.ts`
 - Ortak veri erişimi: `src/lib/publicContent.ts`
-- Arayüz: `src/components/brand/`, `src/app/globals.css`
-- Görseller ve kullanıcının sağladığı logo: `public/parfum-bahari/`
+- Arayüz: `src/components/brand/`, `src/app/globals.css`, `src/app/typography.css`
+- Görseller ve PB marka varlıkları: `public/parfum-bahari/`
 
 Ürün adları, açıklamaları ve görseller bu tasarım için hazırlanmış **konsept içeriklerdir**; gerçek stok, fiyat, sertifika veya performans iddiası değildir. Katalogda bu bilgi belirtilir. Satın alma/ödeme akışı yoktur.
 

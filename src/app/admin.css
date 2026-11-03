@@ -43,3 +43,26 @@
 .admin-cover-select[aria-pressed=true]{color:#6f582f;background:#eee7d3}
 .admin-product-photos button:disabled{opacity:.55;cursor:wait}
 @media(max-width:600px){.admin-product-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.admin-cover-select{font-size:9px}.admin-cover-badge{font-size:8px;padding:5px 6px}.admin-photo-remove{width:28px;height:28px}.admin-photos-help{font-size:10px}}
+
+/* Readable system typography, matching the storefront. */
+.admin-theme { --admin-muted: #555b4e; font-size: 15px; }
+.admin-theme h1, .admin-theme h2, .admin-theme h3 { font-family: Arial, Helvetica, sans-serif; font-weight: 600; line-height: 1.35; letter-spacing: 0; }
+.admin-page-heading h1 { font-size: clamp(28px, 3vw, 36px); }
+.admin-sidebar .brand-mark .brand-wordmark strong { font-size: 20px; }
+.admin-sidebar .brand-mark .brand-wordmark small { font-size: 8px; letter-spacing: .5px; }
+.admin-sidebar nav > a, .admin-sidebar-bottom > a, .admin-sidebar-bottom > button { font-size: 13px; }
+.admin-user strong { font-size: 12px; }
+.admin-user small, .admin-nav-label, .admin-topline { font-size: 11px; letter-spacing: .5px; }
+.admin-page-heading > div > p:last-child, .admin-content-info p, .admin-starter > div > p:not(.admin-eyebrow), .admin-dashboard-links p { font-size: 14px; color: var(--admin-muted); }
+.admin-content-info h2 { font-size: 16px; }
+.admin-theme .admin-button, .admin-theme .admin-text-link, .admin-theme .admin-tabs > a { font-size: 13px; }
+.admin-theme input, .admin-theme textarea, .admin-theme select, .admin-theme .admin-search input { font-size: 16px; }
+.admin-theme .admin-editor label, .admin-theme .admin-image-picker label, .admin-login-form label { font-size: 14px; color: #4d5543; }
+.admin-theme .admin-editor small, .admin-photo-dropzone > span, .admin-photo-status, .admin-stock-photos summary, .admin-list-footer, .admin-content-info > span { font-size: 12px; }
+.admin-theme .admin-modal-heading h2 { font-size: 26px; }
+.admin-login-caption h1 { font-size: clamp(30px, 3.5vw, 44px); }
+.admin-login-caption > span, .admin-login-form > div > p:not(.admin-eyebrow) { font-size: 16px; line-height: 1.8; }
+.admin-login-form h2 { font-size: 30px; line-height: 1.35; }
+.admin-login-visual .brand-mark .brand-wordmark strong { color: #fff8ec; }
+.admin-login-visual .brand-mark .brand-wordmark small { color: #dbc7b5; }
+.admin-login-form .admin-eyebrow, .admin-eyebrow { font-size: 11px !important; letter-spacing: .7px; }

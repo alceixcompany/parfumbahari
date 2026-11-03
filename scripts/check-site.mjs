@@ -4,7 +4,7 @@ const base = process.argv[2] || 'http://localhost:3000';
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url)));
 const starter = JSON.parse(readFileSync(new URL('../src/data/starter-content.json', import.meta.url)));
 const pages = ['/', '/urun-katalogu', '/hakkimizda', '/haberler', '/galeri', '/gizlilik-politikasi', ...products.map(p=>`/urun-katalogu/${p.slug}`), ...starter.haberler.map(p=>`/haberler/${p.slug}`)];
-const names = new Set(); const images = new Set(['/parfum-bahari/hero.webp','/parfum-bahari/hero-trio.webp','/parfum-bahari/logo.png','/parfum-bahari/icon.png']);
+const names = new Set(); const images = new Set(['/parfum-bahari/hero.webp','/parfum-bahari/hero-trio.webp','/parfum-bahari/logo-wordmark.svg','/parfum-bahari/logo-wordmark.png','/parfum-bahari/icon-pb.svg','/parfum-bahari/icon-pb.png']);
 for (const p of products) { assert(!names.has(p.slug), `Duplicate product slug ${p.slug}`); names.add(p.slug); assert(p.images.length > 0 && p.images.includes(p.image)); images.add(p.image); }
 for(const row of [...starter.haberler,...starter.gallery_items]) images.add(row.imageUrl);
 for (const image of images) assert(existsSync(new URL(`../public${image}`,import.meta.url)), `Missing local image ${image}`);
