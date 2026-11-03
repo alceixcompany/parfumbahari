@@ -5,7 +5,7 @@ export function HomeHero() {
   return <section className="home-hero home-hero-visual" aria-labelledby="home-title">
     <h1 id="home-title" className="sr-only">Parfum Bahari Parfüm Koleksiyonu</h1>
     <Link className="hero-image" href="/urun-katalogu" aria-label="Parfum Bahari koleksiyonunu keşfedin">
-      <Image src="/parfum-bahari/hero-trio.webp" alt="Sıcak gün ışığında, taş üzerinde Parfum Bahari erkek, kadın ve unisex parfümleri" fill priority sizes="100vw" />
+      <Image src="/parfum-bahari/hero-branded.webp" alt="Sıcak gün ışığında taş üzerinde YSL Babycat, Amouage Guidance 46 ve Parfums de Marly parfümleri" fill priority sizes="100vw" />
     </Link>
   </section>;
 }
@@ -24,7 +24,7 @@ export function PageIntro({ eyebrow, title, emphasis, description, children }: {
 export function FAQs() {
   const questions = [
     ['Kendi kokumu nasıl bulabilirim?', 'Koleksiyondaki ürünleri ve açıklamalarını inceleyerek kendinize yakın olanı keşfedebilirsiniz. Son karar için kokuyu teninizde deneyip size hissettirdiklerini takip etmenizi öneririz.'],
-    ['Ürünün diğer fotoğraflarını nasıl görebilirim?', 'Ürün detayındaki küçük fotoğraflara veya sağ ve sol oklara dokunarak tüm fotoğrafları inceleyebilirsiniz. Telefonda büyük fotoğrafı yana kaydırmanız da yeterli.'],
+    ['Ürünün diğer fotoğraflarını nasıl görebilirim?', 'Küçük fotoğraflar veya oklarla fotoğraflar arasında geçebilirsiniz. Büyük fotoğrafa dokunarak tam ekranda açabilir, tekrar dokunarak yakınlaştırabilirsiniz. Telefonda ürün fotoğrafını yana kaydırarak da değiştirebilirsiniz.'],
     ['Katalog üzerinden sipariş verebilir miyim?', 'Bu site şu an bir ürün ve koku keşif kataloğudur. Online ödeme veya sipariş alınmaz. Beğendiğiniz ürünün detay sayfasında fotoğraflarını ve açıklamasını inceleyebilir, ürünü favorilerinize ekleyebilirsiniz.'],
     ['Parfümümü nasıl saklamalıyım?', 'Doğrudan güneş ışığından, yüksek sıcaklıktan ve ani sıcaklık değişimlerinden uzak tutun. Serin ve gölgeli bir yer tercih edin; ürünün ambalajındaki saklama ve kullanım bilgilerini dikkate alın.'],
   ];

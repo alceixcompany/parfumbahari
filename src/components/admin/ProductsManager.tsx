@@ -14,7 +14,7 @@ import { useCollection, messageFor } from './useCollection';
 import ProductPhotos from './ProductPhotos';
 
 const empty: ProductRecord = {
-  id: '', slug: '', name: '', subtitle: '', description: '', story: '',
+  id: '', slug: '', name: '', story: '',
   image: '', images: [], concentration: 'Eau de Parfum', mood: '', season: '',
   badge: '', featured: false, isActive: false, order: 10, brand: 'parfum-bahari',
 };
@@ -42,7 +42,7 @@ export default function ProductsManager() {
       {loading ? <p className="admin-empty">Ürünler yükleniyor…</p> : error ? <p className="admin-empty">Ürün listesi şu anda yüklenemiyor.</p> : !items.length ? <div className="admin-empty"><h2>Henüz ürün yok.</h2><p>Yeni bir parfüm ekleyin veya genel bakıştan hazır koleksiyonu içe aktarın.</p><Link href="/admin" className="admin-text-link">Hazır içerikler <FiArrowUpRight /></Link></div> : <div className="admin-content-list">
         {(items as ProductRecord[]).sort((a, b) => a.order - b.order).map(item => <article key={item.id} className="admin-content-row">
           <div className="admin-content-thumbnail"><Image src={item.image || '/parfum-bahari/fleur.webp'} alt="" fill sizes="104px" /></div>
-          <div className="admin-content-info"><span>{getProductImages(item).length} fotoğraf</span><h2>{item.name}</h2><p>{item.description}</p></div>
+          <div className="admin-content-info"><span>{getProductImages(item).length} fotoğraf</span><h2>{item.name}</h2>{item.story && <p>{item.story}</p>}</div>
           <div className="admin-row-actions"><button className={`admin-status ${item.isActive ? 'published' : ''}`} onClick={() => toggle(item)} disabled={busy === item.id}>{item.isActive ? 'Yayında' : 'Taslak'}</button><button className="admin-icon-button" onClick={() => { setSuccess(''); setEditing(item); }} aria-label={`${item.name} düzenle`}><FiEdit2 /></button><Link className="admin-icon-button" href={`/urun-katalogu/${item.slug}`} target="_blank" aria-label={`${item.name} önizle`}><FiArrowUpRight /></Link></div>
         </article>)}
       </div>}
@@ -91,9 +91,7 @@ function ProductEditor({ initial, onClose, onSaved }: { initial: ProductRecord; 
     <form onSubmit={save} className="admin-editor">
       <label>Ürün adı<input required disabled={unavailable} maxLength={100} value={form.name} onChange={event => field('name', event.target.value)} /></label>
       <label>Bağlantı adı<input disabled={unavailable || !!initial.id} value={form.slug} onChange={event => field('slug', slugify(event.target.value))} placeholder={slugify(form.name)} /></label>
-      <label>Alt başlık<input disabled={unavailable} maxLength={150} value={form.subtitle} onChange={event => field('subtitle', event.target.value)} /></label>
       <ProductPhotos images={form.images || []} cover={form.image} prepared={prepared} disabled={busy} onBusy={setUploading} onChange={(images, image, nextPrepared) => { setForm(current => ({ ...current, images, image })); setPrepared(nextPrepared); }} />
-      <label>Kısa açıklama<textarea required disabled={unavailable} maxLength={600} rows={3} value={form.description} onChange={event => field('description', event.target.value)} /></label>
       <label>Ürün açıklaması<textarea disabled={unavailable} maxLength={3000} rows={5} value={form.story} onChange={event => field('story', event.target.value)} /></label>
       <label>Konsantrasyon<input disabled={unavailable} maxLength={80} value={form.concentration} onChange={event => field('concentration', event.target.value)} /></label>
       <div className="admin-field-grid"><label>Rozet<input disabled={unavailable} maxLength={80} value={form.badge} onChange={event => field('badge', event.target.value)} /></label><label>Sıra<input required disabled={unavailable} type="number" min={0} max={9999} value={form.order} onChange={event => field('order', Number(event.target.value))} /></label></div>

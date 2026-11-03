@@ -104,7 +104,8 @@ await assertSucceeds(saveProduct(trusted,multi,'',[firstId,secondId,thirdId].map
 let multiDoc=await getDoc(doc(guest,'products','multiple-photos'));
 assert.equal(multiDoc.data().image,multiImages[1]);
 assert.deepEqual(multiDoc.data().images,multiImages);
-for(const key of ['category','family','sizes','topNotes','heartNotes','baseNotes'])assert.equal(key in multiDoc.data(),false);
+for(const key of ['category','family','sizes','topNotes','heartNotes','baseNotes','subtitle','description'])assert.equal(key in multiDoc.data(),false);
+checks+=2;
 for(const id of [firstId,secondId,thirdId])assert((await getDoc(doc(guest,'media',id))).exists());
 const {getProductImages}=require('../src/lib/productImages.ts');
 assert.deepEqual(getProductImages(multiDoc.data()),[multiImages[1],multiImages[0],multiImages[2]]);

@@ -45,7 +45,7 @@
 @media(max-width:350px){.brand-wordmark strong{font-size:21px}.brand-wordmark small{font-size:4px;letter-spacing:2px}.header-actions{gap:3px}.hero-actions{gap:15px}.hero-actions .button{padding-inline:15px;gap:16px;font-size:9px}.hero-story-link{font-size:9px;gap:10px}.hero-description{font-size:10px}.section-heading h2{font-size:32px}.section-heading>.text-link{font-size:7px;gap:6px}.product-title h3,.catalogue-grid .product-title h3{font-size:21px}.product-badge,.catalogue-grid .product-badge{font-size:4px}.catalogue-sort>svg{display:none}.product-detail-actions{gap:10px}.product-detail-actions .button{min-width:180px}.favourite.labelled span{display:none}}
 
 /* A quiet photographic opening, with the complete three-bottle composition. */
-.home-hero.home-hero-visual{display:block;position:relative;height:auto;min-height:0;max-height:780px;aspect-ratio:16/9;background:#392018;overflow:hidden}
+.home-hero.home-hero-visual{display:block;position:relative;width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:16/9;background:#392018;overflow:hidden}
 .home-hero-visual .hero-image{display:block;position:absolute;inset:0;width:100%;height:100%}
 .home-hero-visual .hero-image>img{object-fit:cover;object-position:center}
 .home-hero-visual .hero-image:focus-visible{outline:3px solid var(--paper);outline-offset:-8px}

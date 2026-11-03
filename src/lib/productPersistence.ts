@@ -16,7 +16,7 @@ export async function saveProduct(database: Firestore, product: ProductRecord, e
   const images = selected ? Array.isArray(selected) ? selected : [selected] : [];
   if (new Set(images.map(image => image.id)).size !== images.length || images.some(image => !photos.includes(`/api/media/${image.id}`) || !/^[a-f0-9-]{36}$/.test(image.id) || !['image/webp', 'image/jpeg'].includes(image.blob.type) || image.blob.size === 0 || image.blob.size > MAX_IMAGE_BYTES || !Number.isInteger(image.width) || !Number.isInteger(image.height) || image.width < 1 || image.height < 1 || image.width > 2400 || image.height > 2400)) throw new Error('Fotoğraf geçerli değil. Yeniden seçin.');
   const now = new Date().toISOString();
-  const removedFields = new Set(['id', 'category', 'family', 'sizes', 'topNotes', 'heartNotes', 'baseNotes']);
+  const removedFields = new Set(['id', 'category', 'family', 'sizes', 'topNotes', 'heartNotes', 'baseNotes', 'subtitle', 'description']);
   const content = Object.fromEntries(Object.entries(product).filter(([key]) => !removedFields.has(key)));
   const media = await Promise.all(images.map(async image => ({
     id: image.id, data: Bytes.fromUint8Array(new Uint8Array(await image.blob.arrayBuffer())),

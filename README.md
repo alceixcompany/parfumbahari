@@ -15,10 +15,10 @@ Yerel `.env.local` dosyası Parfum Bahari Firebase projesine bağlıdır. Ortam 
 
 - `/`: ana sayfa, seçki, marka hikâyesi, koku aileleri ve günlük.
 - `/urun-katalogu`: ürün arama, alfabetik sıralama ve yerel favoriler.
-- `/urun-katalogu/[slug]`: ürün açıklamaları, çoklu fotoğraf galerisi ve ilgili ürünler.
+- `/urun-katalogu/[slug]`: ürün açıklaması, çoklu fotoğraf galerisi, tıklayarak tam ekran açma/yakınlaştırma ve ilgili ürünler.
 - `/hakkimizda`, `/galeri`, `/haberler`, `/haberler/[slug]`, `/gizlilik-politikasi`.
 - `/admin`: statik modda herkese açık içerik özeti; Firebase modunda oturumla korunan yönetim paneli.
-- `/admin/urunler`: ürün ekleme/düzenleme, yayınlama/gizleme, çoklu fotoğraf yükleme ve kapak seçimi.
+- `/admin/urunler`: ürün ekleme/düzenleme, yayınlama/gizleme, çoklu fotoğraf yükleme, kapak seçimi ve tek ürün açıklaması alanı. Alt başlık ve kısa açıklama kaldırıldı.
 
 Eski İngilizce ve sektör sayfaları ilgili Türkçe sayfalara kalıcı yönlenir. Eski marka içerikleri ve görselleri kaldırıldı. Eski uzak veritabanlarına dokunulmadı.
 

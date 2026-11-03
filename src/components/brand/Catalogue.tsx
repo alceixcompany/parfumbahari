@@ -15,7 +15,7 @@ export default function Catalogue({ products, initialQuery = '', onlySaved = fal
   const { items: favourites } = useFavourites();
   const filtered = useMemo(() => {
     const needle = normalize(query.trim());
-    return products.filter(product => (!saved || favourites.includes(product.id)) && (!needle || normalize([product.name, product.subtitle, product.description].join(' ')).includes(needle))).sort((a, b) => sort === 'az' ? a.name.localeCompare(b.name, 'tr') : sort === 'za' ? b.name.localeCompare(a.name, 'tr') : a.order - b.order);
+    return products.filter(product => (!saved || favourites.includes(product.id)) && (!needle || normalize([product.name, product.story].join(' ')).includes(needle))).sort((a, b) => sort === 'az' ? a.name.localeCompare(b.name, 'tr') : sort === 'za' ? b.name.localeCompare(a.name, 'tr') : a.order - b.order);
   }, [products, saved, favourites, query, sort]);
   function reset() { setSaved(false); setQuery(''); setSort('featured'); }
 

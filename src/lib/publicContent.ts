@@ -42,7 +42,6 @@ export const getPublishedProducts = cache(async (): Promise<Product[]> => {
     const images = getProductImages({ image: String(item.image || ''), images: Array.isArray(item.images) ? item.images : [] });
     return {
       id: item.id, slug: String(item.slug), name: String(item.name),
-      subtitle: String(item.subtitle || ''), description: String(item.description || ''),
       story: String(item.story || ''), concentration: String(item.concentration || ''),
       mood: String(item.mood || ''), season: String(item.season || ''), badge: String(item.badge || ''),
       featured: item.featured === true, isActive: item.isActive === true, order: Number(item.order || 0),

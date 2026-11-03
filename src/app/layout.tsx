@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './typography.css';
+import './product-gallery.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { SITE_URL, SEO_CONFIG, getBrandSchema, pageMetadata } from '@/lib/seo';

@@ -12,6 +12,5 @@ export default function ProductCard({ product, priority = false }: { product: Pr
       <Link className="product-discover" href={`/urun-katalogu/${product.slug}`}>Ürünü keşfet <FiArrowUpRight /></Link>
     </div>
     <Link href={`/urun-katalogu/${product.slug}`} className="product-title"><h3>{product.name}</h3><FiArrowUpRight /></Link>
-    {product.subtitle && <p className="product-subtitle">{product.subtitle}</p>}
   </article>;
 }
