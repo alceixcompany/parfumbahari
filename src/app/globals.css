@@ -43,3 +43,29 @@
 @media(max-width:760px){.home-hero{grid-template-columns:minmax(0,1fr)}.hero-copy{min-width:0}.hero-copy h1{max-width:100%}}
 @media(max-width:390px){.hero-copy h1{font-size:clamp(69px,22.5vw,85px)}.hero-copy>.eyebrow{font-size:7px;letter-spacing:1.4px}}
 @media(max-width:350px){.brand-wordmark strong{font-size:21px}.brand-wordmark small{font-size:4px;letter-spacing:2px}.header-actions{gap:3px}.hero-actions{gap:15px}.hero-actions .button{padding-inline:15px;gap:16px;font-size:9px}.hero-story-link{font-size:9px;gap:10px}.hero-description{font-size:10px}.section-heading h2{font-size:32px}.section-heading>.text-link{font-size:7px;gap:6px}.product-title h3,.catalogue-grid .product-title h3{font-size:21px}.product-badge,.catalogue-grid .product-badge{font-size:4px}.catalogue-sort>svg{display:none}.product-detail-actions{gap:10px}.product-detail-actions .button{min-width:180px}.favourite.labelled span{display:none}}
+
+/* A quiet photographic opening, with the complete three-bottle composition. */
+.home-hero.home-hero-visual{display:block;position:relative;height:auto;min-height:0;max-height:780px;aspect-ratio:16/9;background:#392018;overflow:hidden}
+.home-hero-visual .hero-image{display:block;position:absolute;inset:0;width:100%;height:100%}
+.home-hero-visual .hero-image>img{object-fit:cover;object-position:center}
+.home-hero-visual .hero-image:focus-visible{outline:3px solid var(--paper);outline-offset:-8px}
+.product-card .product-title{margin-top:19px}
+.product-subtitle{font-size:11px;line-height:1.85;color:var(--muted);margin-top:10px}
+.catalogue-tools{display:flex;align-items:center;gap:24px}
+.catalogue-saved{display:flex;align-items:center;gap:8px;min-height:40px;padding:9px 12px;border:1px solid var(--line);background:transparent;font-size:10px;color:var(--muted)}
+.catalogue-saved.selected{border-color:var(--burgundy);color:var(--burgundy);background:#f0e6e2}
+.catalogue-saved>span{font-size:9px;color:inherit}
+.catalogue-grid-simple{grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 25px}
+.product-gallery{min-width:0}
+.product-gallery .product-detail-photo{touch-action:pan-y}
+.product-photo-arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;display:grid;place-items:center;z-index:1;background:#fbf7efed;border:1px solid #f9f4e3aa;color:var(--burgundy);font-size:22px;box-shadow:0 3px 15px #24130b0d}
+.product-photo-arrow.previous{left:14px}.product-photo-arrow.next{right:14px}
+.product-photo-arrow:hover{background:#fff}
+.product-photo-counter{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:1.5px;padding:9px 14px;background:#fbf7efed;color:var(--burgundy)}
+.product-photo-thumbnails{display:flex;gap:12px;margin-top:14px;overflow-x:auto;padding:3px 2px 8px}
+.product-photo-thumbnails>button{width:80px;flex:0 0 80px;padding:0;border:2px solid transparent;background:var(--cream);opacity:.7}
+.product-photo-thumbnails>button[aria-pressed=true]{border-color:var(--burgundy);opacity:1;box-shadow:0 0 0 2px var(--paper),0 0 0 3px var(--burgundy)}
+.product-photo-thumbnails img{display:block;width:100%;height:92px;object-fit:cover}
+@media(max-width:1000px){.catalogue-grid-simple{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.home-hero.home-hero-visual{aspect-ratio:4/3;max-height:none}.catalogue-tools{gap:12px}.catalogue-saved{font-size:9px;padding:8px}.catalogue-sort>svg{display:none}.catalogue-sort>label{display:none}.catalogue-toolbar{gap:12px;flex-wrap:wrap}.catalogue-grid-simple{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 16px}.product-photo-arrow{width:40px;height:40px}.product-subtitle{font-size:10px}.product-photo-thumbnails>button{width:68px;flex-basis:68px}.product-photo-thumbnails img{height:80px}}
+@media(max-width:390px){.catalogue-tools{width:100%;justify-content:space-between}.catalogue-toolbar{margin-bottom:25px}.catalogue-search>span{font-size:7px;letter-spacing:1px}}

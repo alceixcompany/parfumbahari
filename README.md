@@ -14,11 +14,11 @@ Yerel `.env.local` dosyası Parfum Bahari Firebase projesine bağlıdır. Ortam 
 ## Sayfalar
 
 - `/`: ana sayfa, seçki, marka hikâyesi, koku aileleri ve günlük.
-- `/urun-katalogu`: arama, kadın/erkek/unisex ve koku ailesi filtreleri, alfabetik sıralama, yerel favoriler.
-- `/urun-katalogu/[slug]`: 6 parfümün hikâyeleri, üst/kalp/dip notaları, boyut seçimi ve ilgili ürünler.
+- `/urun-katalogu`: ürün arama, alfabetik sıralama ve yerel favoriler.
+- `/urun-katalogu/[slug]`: ürün açıklamaları, çoklu fotoğraf galerisi ve ilgili ürünler.
 - `/hakkimizda`, `/galeri`, `/haberler`, `/haberler/[slug]`, `/gizlilik-politikasi`.
 - `/admin`: statik modda herkese açık içerik özeti; Firebase modunda oturumla korunan yönetim paneli.
-- `/admin/urunler`: ürün ekleme/düzenleme, yayınlama/gizleme ve bilgisayardan fotoğraf yükleme.
+- `/admin/urunler`: ürün ekleme/düzenleme, yayınlama/gizleme, çoklu fotoğraf yükleme ve kapak seçimi.
 
 Eski İngilizce ve sektör sayfaları ilgili Türkçe sayfalara kalıcı yönlenir. Eski marka içerikleri ve görselleri kaldırıldı. Eski uzak veritabanlarına dokunulmadı.
 
@@ -26,12 +26,12 @@ Eski İngilizce ve sektör sayfaları ilgili Türkçe sayfalara kalıcı yönlen
 
 - Ürünler: `src/data/products.json`
 - 4 Türkçe yazı, 6 galeri görseli ve 3 kategori: `src/data/starter-content.json`
-- Marka, menü ve koku aileleri: `src/data/brand.ts`
+- Marka ve menü: `src/data/brand.ts`
 - Ortak veri erişimi: `src/lib/publicContent.ts`
 - Arayüz: `src/components/brand/`, `src/app/globals.css`
 - Görseller ve kullanıcının sağladığı logo: `public/parfum-bahari/`
 
-Ürün adları, nota kompozisyonları, hacimler ve görseller bu tasarım için hazırlanmış **konsept içeriklerdir**; gerçek stok, fiyat, sertifika veya performans iddiası değildir. Katalogda bu bilgi belirtilir. Satın alma/ödeme akışı yoktur.
+Ürün adları, açıklamaları ve görseller bu tasarım için hazırlanmış **konsept içeriklerdir**; gerçek stok, fiyat, sertifika veya performans iddiası değildir. Katalogda bu bilgi belirtilir. Satın alma/ödeme akışı yoktur.
 
 Favoriler tarayıcıda saklanır. İletişim sayfası ve formu kaldırılmıştır. Fotoğraflar tarayıcıda küçültülür; ürünle birlikte Firebase Firestore'a kaydedilir.
 

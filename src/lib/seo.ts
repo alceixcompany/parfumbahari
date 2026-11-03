@@ -6,10 +6,10 @@ export const IS_INDEXABLE = process.env.NODE_ENV === 'production' && Boolean(con
 export const SEO_CONFIG = {
   name: business.name,
   tagline: business.tagline,
-  shortDescription: 'Parfum Bahari ile kendi koku hikâyenizi keşfedin. Çiçeksi, odunsu, ferah ve oryantal parfümler; kadın, erkek ve unisex koku koleksiyonları.',
-  fullDescription: 'Parfum Bahari, kokuların uyandırdığı hislerden ilham alır. Ürün kataloğumuzda kadın, erkek ve unisex parfümleri, koku ailelerini ve parfüm notalarını keşfedin.',
+  shortDescription: 'Parfum Bahari ile kendi koku hikâyenizi keşfedin. Parfüm koleksiyonumuzu keşfedin, ürün fotoğraflarını inceleyin ve favori kokularınızı bulun.',
+  fullDescription: 'Parfum Bahari, kokuların uyandırdığı hislerden ilham alır. Ürün kataloğumuzda parfüm koleksiyonumuzu keşfedin; ürün fotoğraflarını, açıklamalarını ve marka hikâyemizi inceleyin.',
   images: { hero: '/parfum-bahari/hero.webp', icon: '/parfum-bahari/icon.png' },
-  keywords: ['Parfum Bahari', 'parfüm kataloğu', 'kadın parfüm', 'erkek parfüm', 'unisex parfüm', 'çiçeksi parfüm', 'odunsu parfüm', 'koku notaları', 'eau de parfum'],
+  keywords: ['Parfum Bahari', 'parfüm kataloğu', 'parfüm koleksiyonu', 'parfüm çeşitleri', 'eau de parfum'],
 };
 export function getBrandSchema() {
   return { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE_URL}/#organization`, name: business.name, url: SITE_URL, logo: `${SITE_URL}/parfum-bahari/logo.png`, image: `${SITE_URL}${SEO_CONFIG.images.hero}`, description: SEO_CONFIG.fullDescription,

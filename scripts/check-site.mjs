@@ -4,8 +4,8 @@ const base = process.argv[2] || 'http://localhost:3000';
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url)));
 const starter = JSON.parse(readFileSync(new URL('../src/data/starter-content.json', import.meta.url)));
 const pages = ['/', '/urun-katalogu', '/hakkimizda', '/haberler', '/galeri', '/gizlilik-politikasi', ...products.map(p=>`/urun-katalogu/${p.slug}`), ...starter.haberler.map(p=>`/haberler/${p.slug}`)];
-const names = new Set(); const images = new Set(['/parfum-bahari/hero.webp','/parfum-bahari/logo.png','/parfum-bahari/icon.png']);
-for (const p of products) { assert(!names.has(p.slug), `Duplicate product slug ${p.slug}`); names.add(p.slug); assert(p.sizes.length>0 && p.sizes.every(n=>n>0)); assert([p.topNotes,p.heartNotes,p.baseNotes].every(notes=>notes.length>0)); images.add(p.image); }
+const names = new Set(); const images = new Set(['/parfum-bahari/hero.webp','/parfum-bahari/hero-trio.webp','/parfum-bahari/logo.png','/parfum-bahari/icon.png']);
+for (const p of products) { assert(!names.has(p.slug), `Duplicate product slug ${p.slug}`); names.add(p.slug); assert(p.images.length > 0 && p.images.includes(p.image)); images.add(p.image); }
 for(const row of [...starter.haberler,...starter.gallery_items]) images.add(row.imageUrl);
 for (const image of images) assert(existsSync(new URL(`../public${image}`,import.meta.url)), `Missing local image ${image}`);
 const links = new Set(); let schemas=0;
@@ -14,6 +14,8 @@ for (const path of pages) {
  const html=await response.text(); assert.match(html,/<html[^>]*lang="tr"/); assert.equal((html.match(/<h1\b/g)||[]).length,1,`${path}: one H1`);
  assert.match(html,/<title>[^<]*Parfum Bahari[^<]*<\/title>/); assert.match(html,/<meta name="description"/); assert.match(html,/<link rel="canonical"/);
  assert(!/<a\b[^>]*href="\/iletisim/.test(html), `${path}: removed contact link`);
+ if(path==='/urun-katalogu'||path.startsWith('/urun-katalogu/')) { assert(!/BOYUT SEÇİN|Üst notalar|Kalp notalar|Dip notalar|Koku ailesi|Kimin için\?/.test(html), `${path}: obsolete product controls`); }
+ if(path==='/') { assert(html.includes('hero-trio.webp')); assert(!/class="hero-copy"|class="hero-seal"|class="hero-image-caption"/.test(html)); }
  assert(!/Light Barbershop|Centereach|Sunny Life|Gümüşoğlu|whitebarbar/.test(html),`${path}: stale brand content`);
  for(const match of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)){JSON.parse(match[1]);schemas++;}
  for(const match of html.matchAll(/<a\b[^>]*href="([^"#]+)"/g)){const path=match[1].replaceAll('&amp;','&');if(path.startsWith('/'))links.add(path);}

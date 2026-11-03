@@ -1,40 +1,106 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { FiArrowUpRight, FiEdit2, FiPlus, FiX } from 'react-icons/fi';
 import { db } from '@/lib/firebase';
-import { products, type Product } from '@/data/products';
-import { useCollection, messageFor } from './useCollection';
-import ImagePicker from './ImagePicker';
+import type { Product } from '@/data/products';
+import { getProductImages } from '@/lib/productImages';
 import { type PreparedImage } from '@/lib/imageUpload';
-import { isProductImage, saveProduct } from '@/lib/productPersistence';
-type RecordProduct = Product & { brand: string };
-const empty = { ...products[0], id: '', slug: '', name: '', subtitle: '', description: '', story: '', topNotes: [], heartNotes: [], baseNotes: [], image: '', badge: '', featured: false, isActive: false, order: 10, brand: 'parfum-bahari' } as RecordProduct;
+import { saveProduct, type ProductRecord } from '@/lib/productPersistence';
+import { useCollection, messageFor } from './useCollection';
+import ProductPhotos from './ProductPhotos';
+
+const empty: ProductRecord = {
+  id: '', slug: '', name: '', subtitle: '', description: '', story: '',
+  image: '', images: [], concentration: 'Eau de Parfum', mood: '', season: '',
+  badge: '', featured: false, isActive: false, order: 10, brand: 'parfum-bahari',
+};
 const slugify = (value: string) => value.toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
 export default function ProductsManager() {
-  const { items, loading, error } = useCollection('products'); const [editing, setEditing] = useState<RecordProduct | null>(null); const [message, setMessage] = useState(''); const [success, setSuccess] = useState(''); const [busy, setBusy] = useState('');
-  async function toggle(item: RecordProduct) { setBusy(item.id); setMessage(''); try { await updateDoc(doc(db, 'products', item.id), { isActive: !item.isActive, updatedAt: new Date().toISOString() }); } catch(e) { setMessage(messageFor(e)); } finally { setBusy(''); } }
-  return <><div className="admin-page-heading"><div><p className="admin-eyebrow">PARFUM BAHARI KOLEKSİYONU</p><h1>Ürün kataloğu</h1><p>Kokuları, notaları ve koleksiyon görünürlüğünü yönetin.</p></div><button className="admin-button" onClick={() => setEditing({ ...empty })}><FiPlus /> Yeni parfüm</button></div>{success && <p role="status" className="admin-success">{success}</p>}{(error || message) && <p role="status" className="admin-error">{error || message}</p>}<section className="admin-panel">{loading ? <p className="admin-empty">Ürünler yükleniyor…</p> : !items.length ? <div className="admin-empty"><h2>Henüz ürün yok.</h2><p>Yeni bir parfüm ekleyin veya genel bakıştan hazır koleksiyonu içe aktarın.</p><Link href="/admin" className="admin-text-link">Hazır içerikler <FiArrowUpRight /></Link></div> : <div className="admin-content-list">{(items as RecordProduct[]).sort((a,b)=>a.order-b.order).map(item => <article key={item.id} className="admin-content-row"><div className="admin-content-thumbnail"><Image src={item.image || '/parfum-bahari/fleur.webp'} alt="" fill sizes="100px" /></div><div className="admin-content-info"><span>{item.family} / {item.category}</span><h2>{item.name}</h2><p>{item.description}</p></div><div className="admin-row-actions"><button className={`admin-status ${item.isActive ? 'published' : ''}`} onClick={() => toggle(item)} disabled={busy === item.id}>{item.isActive ? 'Yayında' : 'Taslak'}</button><button className="admin-icon-button" onClick={() => setEditing(item)} aria-label={`${item.name} düzenle`}><FiEdit2 /></button><Link className="admin-icon-button" href={`/urun-katalogu/${item.slug}`} target="_blank" aria-label={`${item.name} önizle`}><FiArrowUpRight /></Link></div></article>)}</div>}</section>{editing && <ProductEditor key={editing.id || 'new'} initial={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); setSuccess('Ürün kaydedildi.'); }} />}</>;
+  const { items, loading, error } = useCollection('products');
+  const [editing, setEditing] = useState<ProductRecord | null>(null);
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState('');
+  const [busy, setBusy] = useState('');
+
+  async function toggle(item: ProductRecord) {
+    setBusy(item.id); setMessage('');
+    try { await updateDoc(doc(db, 'products', item.id), { isActive: !item.isActive, updatedAt: new Date().toISOString() }); }
+    catch (error) { setMessage(messageFor(error)); }
+    finally { setBusy(''); }
+  }
+
+  return <>
+    <div className="admin-page-heading"><div><p className="admin-eyebrow">PARFUM BAHARI KOLEKSİYONU</p><h1>Ürün kataloğu</h1><p>Ürünleri, fotoğrafları ve koleksiyon görünürlüğünü yönetin.</p></div><button className="admin-button" onClick={() => { setSuccess(''); setEditing({ ...empty }); }}><FiPlus /> Yeni parfüm</button></div>
+    {success && <p role="status" className="admin-success">{success}</p>}
+    {(error || message) && <p role="status" className="admin-error">{error || message}</p>}
+    <section className="admin-panel">
+      {loading ? <p className="admin-empty">Ürünler yükleniyor…</p> : error ? <p className="admin-empty">Ürün listesi şu anda yüklenemiyor.</p> : !items.length ? <div className="admin-empty"><h2>Henüz ürün yok.</h2><p>Yeni bir parfüm ekleyin veya genel bakıştan hazır koleksiyonu içe aktarın.</p><Link href="/admin" className="admin-text-link">Hazır içerikler <FiArrowUpRight /></Link></div> : <div className="admin-content-list">
+        {(items as ProductRecord[]).sort((a, b) => a.order - b.order).map(item => <article key={item.id} className="admin-content-row">
+          <div className="admin-content-thumbnail"><Image src={item.image || '/parfum-bahari/fleur.webp'} alt="" fill sizes="104px" /></div>
+          <div className="admin-content-info"><span>{getProductImages(item).length} fotoğraf</span><h2>{item.name}</h2><p>{item.description}</p></div>
+          <div className="admin-row-actions"><button className={`admin-status ${item.isActive ? 'published' : ''}`} onClick={() => toggle(item)} disabled={busy === item.id}>{item.isActive ? 'Yayında' : 'Taslak'}</button><button className="admin-icon-button" onClick={() => { setSuccess(''); setEditing(item); }} aria-label={`${item.name} düzenle`}><FiEdit2 /></button><Link className="admin-icon-button" href={`/urun-katalogu/${item.slug}`} target="_blank" aria-label={`${item.name} önizle`}><FiArrowUpRight /></Link></div>
+        </article>)}
+      </div>}
+    </section>
+    {editing && <ProductEditor key={editing.id || 'new'} initial={editing} onClose={() => setEditing(null)} onSaved={deleted => { setEditing(null); setSuccess(deleted ? 'Ürün silindi.' : 'Ürün ve fotoğrafları kaydedildi.'); }} />}
+  </>;
 }
-function ProductEditor({ initial, onClose, onSaved }: { initial: RecordProduct; onClose: () => void; onSaved: () => void }) {
-  const [form, setForm] = useState(initial); const [top, setTop] = useState(initial.topNotes.join(', ')); const [heart, setHeart] = useState(initial.heartNotes.join(', ')); const [base, setBase] = useState(initial.baseNotes.join(', ')); const [sizes, setSizes] = useState(initial.sizes.join(', ')); const [busy, setBusy] = useState(false); const [error, setError] = useState(''); const [selectedImage, setSelectedImage] = useState<PreparedImage | null>(null); const [uploading, setUploading] = useState(false); const saving = useRef(false); const [confirmDelete, setConfirmDelete] = useState(false); const modal = useRef<HTMLDialogElement>(null);
+
+function ProductEditor({ initial, onClose, onSaved }: { initial: ProductRecord; onClose: () => void; onSaved: (deleted?: boolean) => void }) {
+  const [form, setForm] = useState<ProductRecord>({ ...empty, ...initial, images: getProductImages(initial) });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [prepared, setPrepared] = useState<PreparedImage[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const saving = useRef(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const modal = useRef<HTMLDialogElement>(null);
+  const unavailable = busy || uploading;
+
   useEffect(() => { const element = modal.current; element?.showModal(); return () => { element?.close(); }; }, []);
   function field<K extends keyof Product>(key: K, value: Product[K]) { setForm(current => ({ ...current, [key]: value })); }
-  async function save(e: FormEvent) {
-    e.preventDefault(); if (saving.current || uploading) return; setError(''); const slug = initial.slug || slugify(form.slug || form.name); const parsed = sizes.split(',').map(s => Number(s.trim()));
-    if (!slug || !parsed.length || parsed.length > 10 || parsed.some(n => !Number.isInteger(n) || n < 1 || n > 1000)) { setError('Geçerli bağlantı adı ve 1–1000 ml arasında boyutlar girin.'); return; }
-    if (!isProductImage(form.image)) { setError('Lütfen bilgisayarınızdan bir ürün fotoğrafı seçin.'); return; }
-    const notes = (value: string) => value.split(',').map(s => s.trim()).filter(Boolean);
-    if (![top, heart, base].every(value => notes(value).length)) { setError('Her katman için en az bir koku notası girin.'); return; }
+
+  async function save(event: FormEvent) {
+    event.preventDefault();
+    if (saving.current || uploading) return;
+    setError('');
     saving.current = true; setBusy(true);
     try {
-      const data = { ...form, slug, name: form.name.trim(), brand: 'parfum-bahari', sizes: [...new Set(parsed)], topNotes: notes(top), heartNotes: notes(heart), baseNotes: notes(base) };
-      await saveProduct(db, data, initial.id, selectedImage);
+      const data = { ...form, slug: initial.slug || slugify(form.slug || form.name), name: form.name.trim(), brand: 'parfum-bahari' };
+      await saveProduct(db, data, initial.id, prepared);
       onSaved();
-    } catch(e) { setError(messageFor(e)); } finally { saving.current = false; setBusy(false); }
+    } catch (error) { setError(messageFor(error)); }
+    finally { saving.current = false; setBusy(false); }
   }
-  async function remove() { setBusy(true); setError(''); try { await deleteDoc(doc(db, 'products', initial.id)); onSaved(); } catch(e) { setError(messageFor(e)); } finally { setBusy(false); } }
-  return <dialog ref={modal} className="admin-modal" aria-label="Parfüm düzenleyici" onCancel={e => {e.preventDefault(); if (!busy && !uploading) onClose();}}><div className="admin-modal-heading"><h2>{initial.id ? 'Parfümü düzenle' : 'Yeni parfüm'}</h2><button onClick={onClose} disabled={busy || uploading} className="admin-icon-button" aria-label="Pencereyi kapat"><FiX /></button></div><form onSubmit={save} className="admin-editor"><label>Ürün adı<input required maxLength={100} value={form.name} onChange={e => field('name',e.target.value)} /></label><label>Bağlantı adı<input disabled={!!initial.id} value={form.slug} onChange={e => field('slug',slugify(e.target.value))} placeholder={slugify(form.name)} /></label><label>Alt başlık<input required maxLength={150} value={form.subtitle} onChange={e => field('subtitle',e.target.value)} /></label><div className="admin-field-grid"><label>Kategori<select value={form.category} onChange={e => field('category',e.target.value as Product['category'])}>{['Kadın','Erkek','Unisex'].map(s=><option key={s}>{s}</option>)}</select></label><label>Koku ailesi<select value={form.family} onChange={e => field('family',e.target.value)}>{['Çiçeksi','Odunsu','Ferah','Oryantal'].map(s=><option key={s}>{s}</option>)}</select></label></div><label>Kısa açıklama<textarea required maxLength={600} rows={3} value={form.description} onChange={e=>field('description',e.target.value)} /></label><label>Kokunun hikâyesi<textarea required maxLength={3000} rows={5} value={form.story} onChange={e=>field('story',e.target.value)} /></label><label>Üst notalar (virgülle ayırın)<input required maxLength={200} value={top} onChange={e=>setTop(e.target.value)} /></label><label>Kalp notalar (virgülle ayırın)<input required maxLength={200} value={heart} onChange={e=>setHeart(e.target.value)} /></label><label>Dip notalar (virgülle ayırın)<input required maxLength={200} value={base} onChange={e=>setBase(e.target.value)} /></label><label>Konsantrasyon<input required maxLength={80} value={form.concentration} onChange={e=>field('concentration',e.target.value)} /></label><label>Boyutlar, ml (virgülle ayırın)<input required value={sizes} maxLength={100} onChange={e=>setSizes(e.target.value)} /></label><ImagePicker value={form.image} selected={selectedImage} onSelect={(image, value) => { setSelectedImage(image); field('image', value); }} onBusy={setUploading} disabled={busy} label="Ürün fotoğrafı" /><label>Ruh hâli<input required value={form.mood} maxLength={200} onChange={e=>field('mood',e.target.value)} /></label><label>Mevsim<input required value={form.season} maxLength={100} onChange={e=>field('season',e.target.value)} /></label><div className="admin-field-grid"><label>Rozet<input maxLength={80} value={form.badge} onChange={e=>field('badge',e.target.value)} /></label><label>Sıra<input required type="number" min={0} max={9999} value={form.order} onChange={e=>field('order',Number(e.target.value))} /></label></div><div className="admin-checkboxes"><label><input type="checkbox" checked={form.isActive} onChange={e=>field('isActive',e.target.checked)} /> Sitede yayınla</label><label><input type="checkbox" checked={form.featured} onChange={e=>field('featured',e.target.checked)} /> Ana sayfada öne çıkar</label></div>{error && <p role="alert" className="admin-error">{error}</p>}<div className="admin-form-actions"><button type="button" disabled={busy || uploading} className="admin-button secondary" onClick={onClose}>Vazgeç</button><button type="submit" disabled={busy || uploading} className="admin-button">{busy ? selectedImage ? 'Fotoğraf yükleniyor ve kaydediliyor…' : 'Kaydediliyor…' : uploading ? 'Fotoğraf hazırlanıyor…' : 'Ürünü kaydet'}</button></div>{initial.id && <div>{confirmDelete ? <><p className="admin-dialog-description">“{initial.name}” kalıcı olarak silinsin mi?</p><button type="button" disabled={busy || uploading} className="admin-button danger-fill" onClick={remove}>Evet, ürünü sil</button><button type="button" disabled={busy || uploading} className="admin-button secondary" onClick={()=>setConfirmDelete(false)}>Vazgeç</button></> : <button type="button" className="admin-text-link" onClick={()=>setConfirmDelete(true)}>Ürünü sil</button>}</div>}</form></dialog>;
+
+  async function remove() {
+    if (saving.current || uploading) return;
+    saving.current = true; setBusy(true); setError('');
+    try { await deleteDoc(doc(db, 'products', initial.id)); onSaved(true); }
+    catch (error) { setError(messageFor(error)); }
+    finally { saving.current = false; setBusy(false); }
+  }
+
+  return <dialog ref={modal} className="admin-modal" aria-label="Parfüm düzenleyici" onCancel={event => { event.preventDefault(); if (!unavailable) onClose(); }}>
+    <div className="admin-modal-heading"><h2>{initial.id ? 'Parfümü düzenle' : 'Yeni parfüm'}</h2><button onClick={onClose} disabled={unavailable} className="admin-icon-button" aria-label="Pencereyi kapat"><FiX /></button></div>
+    <form onSubmit={save} className="admin-editor">
+      <label>Ürün adı<input required disabled={unavailable} maxLength={100} value={form.name} onChange={event => field('name', event.target.value)} /></label>
+      <label>Bağlantı adı<input disabled={unavailable || !!initial.id} value={form.slug} onChange={event => field('slug', slugify(event.target.value))} placeholder={slugify(form.name)} /></label>
+      <label>Alt başlık<input disabled={unavailable} maxLength={150} value={form.subtitle} onChange={event => field('subtitle', event.target.value)} /></label>
+      <ProductPhotos images={form.images || []} cover={form.image} prepared={prepared} disabled={busy} onBusy={setUploading} onChange={(images, image, nextPrepared) => { setForm(current => ({ ...current, images, image })); setPrepared(nextPrepared); }} />
+      <label>Kısa açıklama<textarea required disabled={unavailable} maxLength={600} rows={3} value={form.description} onChange={event => field('description', event.target.value)} /></label>
+      <label>Ürün açıklaması<textarea disabled={unavailable} maxLength={3000} rows={5} value={form.story} onChange={event => field('story', event.target.value)} /></label>
+      <label>Konsantrasyon<input disabled={unavailable} maxLength={80} value={form.concentration} onChange={event => field('concentration', event.target.value)} /></label>
+      <div className="admin-field-grid"><label>Rozet<input disabled={unavailable} maxLength={80} value={form.badge} onChange={event => field('badge', event.target.value)} /></label><label>Sıra<input required disabled={unavailable} type="number" min={0} max={9999} value={form.order} onChange={event => field('order', Number(event.target.value))} /></label></div>
+      <div className="admin-checkboxes"><label><input disabled={unavailable} type="checkbox" checked={form.isActive} onChange={event => field('isActive', event.target.checked)} /> Sitede yayınla</label><label><input disabled={unavailable} type="checkbox" checked={form.featured} onChange={event => field('featured', event.target.checked)} /> Ana sayfada öne çıkar</label></div>
+      {error && <p role="alert" className="admin-error">{error}</p>}
+      <div className="admin-form-actions"><button type="button" disabled={unavailable} className="admin-button secondary" onClick={onClose}>Vazgeç</button><button type="submit" disabled={unavailable} className="admin-button">{busy ? 'Ürün ve fotoğrafları kaydediliyor…' : uploading ? 'Fotoğraflar hazırlanıyor…' : 'Ürünü kaydet'}</button></div>
+      {initial.id && <div>{confirmDelete ? <><p className="admin-dialog-description">“{initial.name}” kalıcı olarak silinsin mi?</p><button type="button" disabled={unavailable} className="admin-button danger-fill" onClick={remove}>Evet, ürünü sil</button><button type="button" disabled={unavailable} className="admin-button secondary" onClick={() => setConfirmDelete(false)}>Vazgeç</button></> : <button type="button" disabled={unavailable} className="admin-text-link" onClick={() => setConfirmDelete(true)}>Ürünü sil</button>}</div>}
+    </form>
+  </dialog>;
 }

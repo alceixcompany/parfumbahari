@@ -1,23 +1,29 @@
 'use client';
-import { useMemo, useRef, useState } from 'react';
-import { FiArrowRight, FiGrid, FiHeart, FiSearch, FiSliders, FiX } from 'react-icons/fi';
+
+import { useMemo, useState } from 'react';
+import { FiArrowRight, FiGrid, FiHeart, FiSearch, FiX } from 'react-icons/fi';
 import type { Product } from '@/data/products';
 import ProductCard from './ProductCard';
 import { useFavourites } from './Favourites';
-const families = ['Çiçeksi', 'Odunsu', 'Ferah', 'Oryantal'];
-const categories = ['Kadın', 'Erkek', 'Unisex'];
+
 const normalize = (value: string) => value.toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ı/g, 'i');
-export default function Catalogue({ products, initialFamily = '', initialCategory = '', initialQuery = '', onlySaved = false, autofocus = false }: { products: Product[]; initialFamily?: string; initialCategory?: string; initialQuery?: string; onlySaved?: boolean; autofocus?: boolean }) {
-  const [family, setFamily] = useState(families.includes(initialFamily) ? initialFamily : '');
-  const [category, setCategory] = useState(categories.includes(initialCategory) ? initialCategory : '');
-  const [query, setQuery] = useState(initialQuery); const [sort, setSort] = useState('featured');
-  const [saved, setSaved] = useState(onlySaved); const [filtersOpen, setFiltersOpen] = useState(false);
-  const { items: favourites } = useFavourites(); const results = useRef<HTMLDivElement>(null);
-  const countFilters = Number(!!family) + Number(!!category) + Number(saved);
+
+export default function Catalogue({ products, initialQuery = '', onlySaved = false, autofocus = false }: { products: Product[]; initialQuery?: string; onlySaved?: boolean; autofocus?: boolean }) {
+  const [query, setQuery] = useState(initialQuery);
+  const [sort, setSort] = useState('featured');
+  const [saved, setSaved] = useState(onlySaved);
+  const { items: favourites } = useFavourites();
   const filtered = useMemo(() => {
     const needle = normalize(query.trim());
-    return products.filter(p => (!family || p.family === family) && (!category || p.category === category) && (!saved || favourites.includes(p.id)) && (!needle || normalize([p.name, p.description, p.family, p.category, ...p.topNotes, ...p.heartNotes, ...p.baseNotes].join(' ')).includes(needle))).sort((a, b) => sort === 'az' ? a.name.localeCompare(b.name, 'tr') : sort === 'za' ? b.name.localeCompare(a.name, 'tr') : a.order - b.order);
-  }, [products, family, category, saved, favourites, query, sort]);
-  function reset() { setFamily(''); setCategory(''); setSaved(false); setQuery(''); setSort('featured'); }
-  return <section className="catalogue-section"><div className="container"><div className="catalogue-search"><FiSearch /><label className="sr-only" htmlFor="catalogue-query">Koku, nota veya ürün adı ara</label><input id="catalogue-query" type="search" placeholder="Bir koku, bir nota, bir his arayın…" value={query} onChange={e => setQuery(e.target.value)} autoFocus={autofocus} /><span>{products.length} KOKU HİKÂYESİ</span></div><div className="catalogue-toolbar"><button className="filter-toggle" aria-controls="catalogue-filters" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(!filtersOpen)}><FiSliders /> Filtreler {countFilters > 0 && <span>({countFilters})</span>}</button><p role="status" aria-live="polite"><strong>{filtered.length}</strong> koku keşfedilmeyi bekliyor</p><div className="catalogue-sort"><label htmlFor="catalogue-sort">Sıralama</label><select id="catalogue-sort" value={sort} onChange={e => setSort(e.target.value)}><option value="featured">Öne çıkanlar</option><option value="az">İsim: A – Z</option><option value="za">İsim: Z – A</option></select><FiGrid aria-hidden="true" /></div></div><div className="catalogue-layout"><aside id="catalogue-filters" className={`catalogue-filters ${filtersOpen ? 'filters-open' : ''}`}><div className="filter-heading"><span>SEÇİMİNİZİ DARALTIN</span>{countFilters > 0 && <button onClick={reset}>Temizle</button>}</div><fieldset><legend>Kimin için?</legend>{categories.map(item => <label key={item}><input type="checkbox" checked={category === item} onChange={() => setCategory(category === item ? '' : item)} /><span>{item}</span><small>{products.filter(p => p.category === item).length}</small></label>)}</fieldset><fieldset><legend>Koku ailesi</legend>{families.map((item, i) => <label key={item}><input type="checkbox" checked={family === item} onChange={() => setFamily(family === item ? '' : item)} /><span><i className={`family-dot dot-${i}`} />{item}</span><small>{products.filter(p => p.family === item).length}</small></label>)}</fieldset><fieldset><legend>Seçkilerim</legend><label><input type="checkbox" checked={saved} onChange={e => setSaved(e.target.checked)} /><span><FiHeart /> Favorilerim</span><small>{favourites.length}</small></label></fieldset><div className="filter-note"><span>Biraz ilham?</span><p>Bir kokuyu sadece notalarıyla değil, size hissettirdikleriyle seçin.</p><a href="/haberler/kendinize-yakin-bir-koku">Koku rehberine göz atın <FiArrowRight /></a></div></aside><div ref={results} className="catalogue-results">{(countFilters > 0 || query) && <div className="active-filters">{[category, family, saved ? 'Favorilerim' : '', query ? `“${query}”` : ''].filter(Boolean).map(item => <span key={item}>{item}</span>)}<button onClick={reset}>Tümünü temizle <FiX /></button></div>}{filtered.length ? <div className="product-grid catalogue-grid">{filtered.map((product, i) => <ProductCard product={product} key={product.id} priority={i < 3} />)}</div> : <div className="catalogue-empty"><FiSearch /><h2>Bu notada bir koku bulamadık.</h2><p>Başka bir kelime deneyin veya filtreleri temizleyip koleksiyonu yeniden keşfedin.</p><button className="button" onClick={reset}>Tüm kokuları göster <FiArrowRight /></button></div>}<p className="catalogue-footnote">Bu koleksiyon için hazırlanan ürün adları, nota kompozisyonları ve görseller konsept niteliğindedir. Güncel ürün, içerik, boyut ve bulunabilirlik bilgisi marka tarafından teyit edilir.</p></div></div></div></section>;
+    return products.filter(product => (!saved || favourites.includes(product.id)) && (!needle || normalize([product.name, product.subtitle, product.description].join(' ')).includes(needle))).sort((a, b) => sort === 'az' ? a.name.localeCompare(b.name, 'tr') : sort === 'za' ? b.name.localeCompare(a.name, 'tr') : a.order - b.order);
+  }, [products, saved, favourites, query, sort]);
+  function reset() { setSaved(false); setQuery(''); setSort('featured'); }
+
+  return <section className="catalogue-section"><div className="container">
+    <div className="catalogue-search"><FiSearch /><label className="sr-only" htmlFor="catalogue-query">Ürün ara</label><input id="catalogue-query" type="search" placeholder="Koleksiyonda bir koku arayın…" value={query} onChange={event => setQuery(event.target.value)} autoFocus={autofocus} /><span>{products.length} PARFÜM</span></div>
+    <div className="catalogue-toolbar"><p role="status" aria-live="polite"><strong>{filtered.length}</strong> parfüm keşfedilmeyi bekliyor</p><div className="catalogue-tools"><button className={`catalogue-saved${saved ? ' selected' : ''}`} aria-pressed={saved} onClick={() => setSaved(!saved)}><FiHeart /> Favorilerim <span>{favourites.length}</span></button><div className="catalogue-sort"><label htmlFor="catalogue-sort">Sıralama</label><select id="catalogue-sort" value={sort} onChange={event => setSort(event.target.value)}><option value="featured">Öne çıkanlar</option><option value="az">İsim: A – Z</option><option value="za">İsim: Z – A</option></select><FiGrid aria-hidden="true" /></div></div></div>
+    {(saved || query) && <div className="active-filters">{saved && <span>Favorilerim</span>}{query && <span>“{query}”</span>}<button onClick={reset}>Tümünü temizle <FiX /></button></div>}
+    {filtered.length ? <div className="product-grid catalogue-grid catalogue-grid-simple">{filtered.map((product, index) => <ProductCard product={product} key={product.id} priority={index < 4} />)}</div> : <div className="catalogue-empty"><FiSearch /><h2>Aradığınız ürünü bulamadık.</h2><p>Başka bir kelime deneyin veya koleksiyonun tamamına göz atın.</p><button className="button" onClick={reset}>Tüm kokuları göster <FiArrowRight /></button></div>}
+    <p className="catalogue-footnote">Koleksiyondaki ürün ve görseller temsilî olarak hazırlanmıştır. Güncel ürün bilgisi ve bulunabilirlik marka tarafından teyit edilir.</p>
+  </div></section>;
 }

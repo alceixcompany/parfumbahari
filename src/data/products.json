@@ -4,207 +4,113 @@
     "slug": "fleur-de-bahar",
     "name": "Fleur de Bahar",
     "subtitle": "Baharın en güzel hâli",
-    "category": "Kadın",
-    "family": "Çiçeksi",
     "image": "/parfum-bahari/fleur.webp",
     "description": "Manolya ve yaseminin yumuşak dokusuna, armudun aydınlık açılışı eşlik ediyor. Teninizde kalan zarif bir bahar izi.",
     "story": "Bir pencere açılır; içeriye taze çiçeklerin kokusu dolar. Fleur de Bahar, o ilk nefesin hafifliğinden ilham alıyor. Meyvemsi açılışının ardından beyaz çiçekler belirginleşiyor, misk ve sandal ağacıyla sakin bir kapanışa uzanıyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Armut",
-      "Bergamot"
-    ],
-    "heartNotes": [
-      "Manolya",
-      "Yasemin",
-      "Gül"
-    ],
-    "baseNotes": [
-      "Beyaz misk",
-      "Sandal ağacı"
-    ],
     "mood": "Zarif, aydınlık, romantik",
     "season": "İlkbahar · Yaz",
     "badge": "Yeni koleksiyon",
     "featured": true,
     "isActive": true,
-    "order": 1
+    "order": 1,
+    "images": [
+      "/parfum-bahari/fleur.webp"
+    ]
   },
   {
     "id": "santal-noir",
     "slug": "santal-noir",
     "name": "Santal Noir",
     "subtitle": "Sessiz bir karakter",
-    "category": "Unisex",
-    "family": "Odunsu",
     "image": "/parfum-bahari/santal.webp",
     "description": "Sandal ağacının kremsi sıcaklığı, kakule ve sedirle buluşuyor. Sade olduğu kadar akılda kalan bir kompozisyon.",
     "story": "Santal Noir, kalabalığın içinde kendine ait bir alan açmayı sevenlere. İlk anda hissedilen kakule, yerini yumuşak bir sandal dokusuna bırakıyor. Sedir ve amber, bu odunsu hikâyenin sakin ritmini tamamlıyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Kakule",
-      "Karabiber"
-    ],
-    "heartNotes": [
-      "Sandal ağacı",
-      "İris"
-    ],
-    "baseNotes": [
-      "Sedir",
-      "Amber",
-      "Misk"
-    ],
     "mood": "Sakin, derin, özgün",
     "season": "Sonbahar · Kış",
     "badge": "İmza koleksiyonu",
     "featured": true,
     "isActive": true,
-    "order": 2
+    "order": 2,
+    "images": [
+      "/parfum-bahari/santal.webp"
+    ]
   },
   {
     "id": "neroli-soleil",
     "slug": "neroli-soleil",
     "name": "Neroli Soleil",
     "subtitle": "Güneşe açılan bir kapı",
-    "category": "Unisex",
-    "family": "Ferah",
     "image": "/parfum-bahari/neroli.webp",
     "description": "Bergamot, portakal çiçeği ve neroli. Akdeniz sabahlarını hatırlatan, temiz ve ışıl ışıl bir koku.",
     "story": "Güneş henüz yükselirken bir narenciye bahçesinde yürümek. Neroli Soleil, yeşil yaprakların arasındaki ışığı ve portakal çiçeğinin ince kokusunu bir araya getiriyor. Beyaz misk, ferah açılışı yumuşakça dengeliyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Bergamot",
-      "Mandalina"
-    ],
-    "heartNotes": [
-      "Neroli",
-      "Portakal çiçeği"
-    ],
-    "baseNotes": [
-      "Beyaz misk",
-      "Vetiver"
-    ],
     "mood": "Canlı, temiz, iyimser",
     "season": "İlkbahar · Yaz",
     "badge": "Editörün seçimi",
     "featured": true,
     "isActive": true,
-    "order": 3
+    "order": 3,
+    "images": [
+      "/parfum-bahari/neroli.webp"
+    ]
   },
   {
     "id": "ambre-dore",
     "slug": "ambre-dore",
     "name": "Ambre Doré",
     "subtitle": "Altın saatlerin sıcaklığı",
-    "category": "Unisex",
-    "family": "Oryantal",
     "image": "/parfum-bahari/ambre.webp",
     "description": "Reçinemsi amber, vanilya ve hafif baharatlar. Gün batımı kadar sıcak, kadife kadar yumuşak.",
     "story": "Günün ışığının ağır ağır altına döndüğü o kısa an. Ambre Doré, safranın ince dokunuşunu benzoin ve amberle birleştiriyor. Vanilya, kompozisyona ölçülü bir tatlılık katıyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Safran",
-      "Pembe biber"
-    ],
-    "heartNotes": [
-      "Amber",
-      "Benzoin"
-    ],
-    "baseNotes": [
-      "Vanilya",
-      "Paçuli",
-      "Sandal ağacı"
-    ],
     "mood": "Sıcak, sarıp sarmalayan, etkileyici",
     "season": "Sonbahar · Kış",
     "badge": "İmza koleksiyonu",
     "featured": true,
     "isActive": true,
-    "order": 4
+    "order": 4,
+    "images": [
+      "/parfum-bahari/ambre.webp"
+    ]
   },
   {
     "id": "rose-de-soie",
     "slug": "rose-de-soie",
     "name": "Rose de Soie",
     "subtitle": "İpek gibi bir gül",
-    "category": "Kadın",
-    "family": "Çiçeksi",
     "image": "/parfum-bahari/rose.webp",
     "description": "Taze gül yaprakları, liçi ve şakayıkla açılıyor; hafif misk notalarıyla yumuşacık bir iz bırakıyor.",
     "story": "Gülü bildiğiniz hâliyle yeniden düşünün. Rose de Soie, yoğun bir buket yerine taze kesilmiş bir gülün yalın güzelliğini anlatıyor. Liçinin narin meyvemsi dokusu ve şakayık, bu çiçeksi hikâyeye hafiflik katıyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Liçi",
-      "Pembe biber"
-    ],
-    "heartNotes": [
-      "Gül",
-      "Şakayık"
-    ],
-    "baseNotes": [
-      "Beyaz misk",
-      "Kaşmir ağacı"
-    ],
     "mood": "Narin, romantik, yumuşak",
     "season": "İlkbahar · Sonbahar",
     "badge": "Yeni koleksiyon",
     "featured": false,
     "isActive": true,
-    "order": 5
+    "order": 5,
+    "images": [
+      "/parfum-bahari/rose.webp"
+    ]
   },
   {
     "id": "bleu-vetiver",
     "slug": "bleu-vetiver",
     "name": "Bleu Vétiver",
     "subtitle": "Ufka doğru bir nefes",
-    "category": "Erkek",
-    "family": "Ferah",
     "image": "/parfum-bahari/vetiver.webp",
     "description": "Greyfurtun enerjisi ve vetiverin topraksı karakteri. Ferahlığın daha derin, daha dingin bir yorumu.",
     "story": "Kıyıya vuran dalgalar, serin hava ve güneşin ısıttığı ahşap. Bleu Vétiver, narenciye ile aromatik notalar arasında bir denge kuruyor. Dipteki vetiver ve sedir, temiz açılışa güçlü bir zemin hazırlıyor.",
     "concentration": "Eau de Parfum",
-    "sizes": [
-      50,
-      100
-    ],
-    "topNotes": [
-      "Greyfurt",
-      "Limon"
-    ],
-    "heartNotes": [
-      "Adaçayı",
-      "Lavanta"
-    ],
-    "baseNotes": [
-      "Vetiver",
-      "Sedir",
-      "Misk"
-    ],
     "mood": "Dingin, taze, dengeli",
     "season": "İlkbahar · Yaz",
     "badge": "İmza koleksiyonu",
     "featured": false,
     "isActive": true,
-    "order": 6
+    "order": 6,
+    "images": [
+      "/parfum-bahari/vetiver.webp"
+    ]
   }
 ]

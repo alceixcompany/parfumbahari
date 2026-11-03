@@ -29,3 +29,17 @@
 .admin-stock-photos>small{display:block;margin-top:10px}
 @media(max-width:640px){.admin-image-preview img{height:200px}.admin-editor .admin-photo-dropzone{min-height:175px;padding:20px 12px}.admin-photo-dropzone>span{font-size:10px}}
 .admin-sidebar .brand-wordmark strong{color:#f4e9da}.admin-sidebar .brand-wordmark small{color:#d1b3a0}.admin-sidebar .brand-emblem{width:38px;height:38px}.admin-sidebar .brand-wordmark strong{font-size:25px}.admin-login-visual .brand-wordmark strong{color:#fff8ec}.admin-login-visual .brand-wordmark small{color:#dbc7b5}
+
+/* Product photo gallery and explicit cover selection. */
+.admin-photos-help{font-size:11px;line-height:1.9;color:#7b826c;font-weight:400}
+.admin-product-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.admin-product-photo-grid>article{min-width:0;border:1px solid #d8d6c5;background:#fffefa}
+.admin-product-photo-grid>article.is-cover{border-color:#9b7c42;box-shadow:0 0 0 1px #9b7c42}
+.admin-product-photo-preview{position:relative;aspect-ratio:4/5;background:#ece9dc;overflow:hidden}
+.admin-product-photo-preview>img{display:block;width:100%;height:100%;object-fit:cover}
+.admin-cover-badge{position:absolute;top:9px;left:9px;display:flex;align-items:center;gap:5px;background:#faf5e7ed;color:#72603e;font-size:9px;padding:6px 8px}
+.admin-photo-remove{position:absolute;top:7px;right:7px;width:30px;height:30px;display:grid;place-items:center;border:1px solid #d9d0bb;background:#fffaf0ee;color:#8d574a;font-size:17px}
+.admin-cover-select{display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-top:1px solid #e5dfcf;background:transparent;color:#7d826d;width:100%;min-height:42px;padding:10px 5px;font-size:10px}
+.admin-cover-select[aria-pressed=true]{color:#6f582f;background:#eee7d3}
+.admin-product-photos button:disabled{opacity:.55;cursor:wait}
+@media(max-width:600px){.admin-product-photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.admin-cover-select{font-size:9px}.admin-cover-badge{font-size:8px;padding:5px 6px}.admin-photo-remove{width:28px;height:28px}.admin-photos-help{font-size:10px}}

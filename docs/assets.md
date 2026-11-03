@@ -2,7 +2,7 @@
 
 Üretim modu: **yerleşik Imagegen aracı**. Kullanıcının sağladığı logo korunarak `public/parfum-bahari/logo.png` olarak optimize edildi. Küçük simge `public/parfum-bahari/icon.png` ve `src/app/icon.png` konumundadır. Logo yeniden üretilmedi.
 
-Yedi yeni görsel, yerel `public/parfum-bahari/` klasöründe WebP olarak saklanır. Kaynak PNG'ler araç tarafından Codex görsel kitaplığına kaydedildi; projedeki görseller bu dış konuma bağımlı değildir. Sharp yalnızca yeniden boyutlandırma ve WebP dönüştürme için kullanıldı. Ürün görselleri ve koku kompozisyonları temsilî koleksiyon konseptleridir.
+Sekiz görsel, yerel `public/parfum-bahari/` klasöründe WebP olarak saklanır. Kaynak PNG'ler araç tarafından Codex görsel kitaplığına kaydedildi; projedeki görseller bu dış konuma bağımlı değildir. Sharp yalnızca yeniden boyutlandırma ve WebP dönüştürme için kullanıldı. Ürün görselleri ve koku kompozisyonları temsilî koleksiyon konseptleridir.
 
 ## Hero istemi
 
@@ -39,3 +39,11 @@ A clear rectangular luxury perfume bottle filled with very pale blush pink liqui
 ### vetiver.webp
 
 A smoky olive tinted rectangular luxury perfume bottle filled with pale amber liquid, ivory label reading 'PARFUM BAHARI' above 'BLEU VETIVER', matte dark burgundy rounded cylindrical cap. A small stem of olive green leaves and thin dried vetiver roots next to the base. Warm muted sage green plaster backdrop and pale stone surface.
+
+## Üç parfümlü ana sayfa görseli — 3 Kasım 2026
+
+Dosya: `public/parfum-bahari/hero-trio.webp`. Yerleşik Imagegen aracıyla, eski `hero.webp` referans alınarak düzenlendi. Ana sayfada erkek, kadın ve unisex üç şişe birlikte gösterilir; metin katmanları ve beyaz etiket yoktur. Sharp yalnızca WebP dönüşümü için kullanıldı. Eski görsel diğer sayfalarda kullanılmaya devam eder.
+
+Kullanılan tam istem:
+
+> Use case: precise-object-edit / product-mockup. Edit the supplied original Parfum Bahari perfume photograph into a wide editorial website hero photograph. Preserve the original photorealistic atmosphere: deep warm burgundy brown background, soft directional amber sunlight, rough pale limestone plinth, delicate white magnolia branches at the upper right, a little dusty rose fabric. Replace the single bottle with exactly THREE premium distinct Parfum Bahari perfume bottles together in a balanced central still-life group, all three completely visible with space between them. One masculine bottle: smoky dark rectangular glass with restrained black cap. One feminine bottle: the original clear golden liquid square bottle with burgundy cylindrical cap. One unisex bottle: clear slightly green tinted architectural glass with understated brushed metal cap. On the small physical paper labels only, use 'PARFUM BAHARI' and respectively 'HOMME', 'FEMME', 'UNISEX'. No ml or volume text. Keep the three bottles together inside the middle 60 percent of the frame so the group works on mobile as well. Horizontal wide landscape composition, natural optical perspective, authentic product photography, subtle reflections and real glass texture. No floating elements, no web interface, no sticker, no seal, no badge, no watermark, no caption or added advertising typography anywhere. Preserve refined understated warm editorial style of reference. This is an image asset only.

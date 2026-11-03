@@ -1,16 +1,17 @@
-# Son doğrulama — 22 Ekim 2026
+# Son doğrulama — 3 Kasım 2026
 
-Veri kaynağı: statik. Firebase anahtarı, uzak veritabanı veya canlı işletme hesabı kullanılmadı.
+Veri kaynağı: Parfum Bahari Firebase projesi. Mevcut altı ürünün tek fotoğraflı kayıtlarıyla geriye uyumluluk kontrol edildi. Tarayıcıdaki fotoğraf seçme denemeleri kaydedilmeden kapatıldı; canlı veritabanına deneme ürünü eklenmedi.
 
-- `npm run build`: başarılı; Next.js production çıktısı ve TypeScript kontrolü tamamlandı.
-- `npm run check:site`: 17 genel sayfa, 32 iç bağlantı hedefi, 9 yerel görsel/simge ve 32 JSON-LD bloğu doğrulandı. Eski URL yönlendirmeleri, 404 sayfaları, sitemap, manifest ve statik yönetim sınırı kontrol edildi.
-- `npm run test:rules`: yerel `demo-parfum-bahari` Firestore emülatöründe 48 güvenlik ve içerik yaşam döngüsü kontrolü geçti. Emülatör test sonunda kapandı.
-- Tarayıcı: katalogda aile/kategori filtreleri, nota araması, sonuç bulunamadı durumu, alfabetik sıralama, favori ekleme/çıkarma ve yeniden yüklemede koruma kontrol edildi.
-- Ürün boyutu seçiminden ürüne özel iletişim konusuna geçiş doğrulandı. Yerel mesaj taslağı kaydetme, yeniden yükleme ve silme denendi; test taslağı ve test favorisi kaldırıldı.
-- Mobil menü açma/kapatma, Escape, klavye odağı ve galeri filtresi/görsel diyaloğu kontrol edildi.
-- 1440 px masaüstü ve 390 px mobil görünümler incelendi. Ana sayfa ayrıca 320 px genişlikte taşma açısından kontrol edildi; ana Türkçe sayfalarda 390 px genişlikte yatay taşma yok.
-- Temiz production tarayıcı oturumunda hata veya uyarı kaydı yok.
+- Üretim derlemesi ve TypeScript kontrolü başarılı.
+- Değişen ürün, galeri ve kayıt modüllerinde ESLint başarılı.
+- `npm run check:site`: 16 genel sayfa, 18 iç bağlantı hedefi, 10 yerel görsel ve 30 JSON-LD bloğu doğrulandı. Yönlendirmeler, eksik sayfalar, sitemap, manifest ve yönetici oturum sınırı geçti.
+- `npm run test:rules`: izole `demo-parfum-bahari` Firestore emülatöründe 82 kontrol geçti. Çoklu medya kaydı, kapak seçimi, kapak değiştirme, fotoğraf listesinden çıkarma, geçersiz fotoğraf sınırları ve bir medya yazımı reddedildiğinde tüm işlemin geri alınması test edildi.
+- Yönetici oturumu ve başlangıç içeriklerinin bir kez aktarımı için mevcut testler başarılı.
+- Masaüstü tarayıcıda bir defada üç fotoğraf seçildi; 15 MB kaynak fotoğraf da sıkıştırılarak önizlendi. İkinci fotoğraf kapak seçildi; seçili fotoğraf kaldırıldığında ilk kalan fotoğraf kapak oldu.
+- 390 px mobil genişlikte çoklu fotoğraf düzenleyicisi ve kapak seçimi kontrol edildi; yatay taşma yok.
+- Ürün detay galerisinin gerçek bileşeni geçici yerel kontrol sayfasında çalıştırıldı. Kapak görselinin ilk sıraya alınması, ileri/geri okları, küçük fotoğraf seçimi ve klavye okları doğrulandı. Kontrol sayfası üretim kaynaklarından kaldırıldı.
+- Katalogda ürün araması, alfabetik sıralama, favori ekleme/çıkarma, favori filtresi ve boş sonuç görünümü doğrulandı. Deneme favorisi kaldırıldı.
+- Ürün ekranlarında kategori, koku ailesi, nota ve ml kontrollerinin bulunmadığı kontrol edildi.
+- Ana sayfadaki üç şişeli görsel masaüstünde ve 390 px telefonda incelendi. Üç şişe birlikte görünüyor; eski sol metin, görsel yazıları ve beyaz etiket kaldırıldı.
 
-Ekran görüntüleri yerel `artifacts/parfum-bahari/` klasöründedir: `home-desktop.jpg`, `home-full.jpg`, `home-mobile.jpg`, `catalogue-desktop.jpg`, `catalogue-mobile.jpg`. Bu klasör geliştirme çıktısı olarak Git dışında tutulur.
-
-Canlı Firebase hesabı ve gerçek işletme iletişim bilgileri henüz sağlanmadığından uzak yönetici girişi, gerçek mesaj teslimi ve canlı veritabanı entegrasyonu denenmedi. Geçiş için `firebase-setup.md` izlenmelidir.
+Ekran görüntüleri Git dışında tutulan `artifacts/product-update/` klasöründedir. Galeri gezinme kontrolü için kullanılan geçici sunucu kapatıldı.

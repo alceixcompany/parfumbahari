@@ -4,6 +4,7 @@ import starter from '@/data/starter-content.json';
 import { products, type Product } from '@/data/products';
 import type { BlogPost } from '@/data/blogPosts';
 import { CONTENT_SOURCE } from './contentSource';
+import { getProductImages } from './productImages';
 export type GalleryContent = { id: string; src: string; title: string; tag: string; description: string; order: number; featured: boolean; illustrative: boolean };
 type Value = { stringValue?: string; booleanValue?: boolean; integerValue?: string; doubleValue?: number; timestampValue?: string; arrayValue?: { values?: Value[] }; mapValue?: { fields?: Record<string, Value> } };
 function unpack(value: Value): unknown {
@@ -37,7 +38,17 @@ export const readPublishedCollection = cache(async (collection: string): Promise
 });
 export const getPublishedProducts = cache(async (): Promise<Product[]> => {
   const rows = await readPublishedCollection('products');
-  return rows.filter(item => typeof item.slug === 'string' && typeof item.name === 'string' && Array.isArray(item.sizes) && Array.isArray(item.topNotes) && Array.isArray(item.heartNotes) && Array.isArray(item.baseNotes)).map(item => ({ ...item, image: safeImage(String(item.image || '')) }) as Product).sort((a, b) => a.order - b.order);
+  return rows.filter(item => typeof item.slug === 'string' && typeof item.name === 'string').map(item => {
+    const images = getProductImages({ image: String(item.image || ''), images: Array.isArray(item.images) ? item.images : [] });
+    return {
+      id: item.id, slug: String(item.slug), name: String(item.name),
+      subtitle: String(item.subtitle || ''), description: String(item.description || ''),
+      story: String(item.story || ''), concentration: String(item.concentration || ''),
+      mood: String(item.mood || ''), season: String(item.season || ''), badge: String(item.badge || ''),
+      featured: item.featured === true, isActive: item.isActive === true, order: Number(item.order || 0),
+      image: images[0] || '/parfum-bahari/hero.webp', images,
+    } as Product;
+  }).sort((a, b) => a.order - b.order);
 });
 export const getPublishedProduct = cache(async (slug: string) => (await getPublishedProducts()).find(item => item.slug === slug));
 export const getPublishedPosts = cache(async (): Promise<BlogPost[]> => (await readPublishedCollection('haberler')).filter(item => typeof item.title === 'string' && typeof item.slug === 'string').map(item => ({
