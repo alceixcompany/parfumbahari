@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: Props) {
     <section className="container product-detail">
       <ProductGallery key={product.id} product={product} />
       <div className="product-detail-copy"><p className="eyebrow">PARFUM BAHARI</p><h1>{product.name}</h1>{product.concentration && <p className="detail-concentration">{product.concentration}</p>}<ProductExperience product={product} />
-        <div className="detail-accordions">{product.story && <details open><summary>Ürün hakkında <span>+</span></summary><p>{product.story}</p></details>}<details><summary>Kullanım & saklama <span>+</span></summary><p>Temiz ve kuru cilde, gözlerden ve tahriş olmuş bölgelerden uzak uygulayın. Doğrudan güneş ışığından ve yüksek sıcaklıktan koruyun. Ürünün ambalajındaki kullanım bilgilerini dikkate alın.</p></details></div>
+        {product.story && <div className="detail-accordions"><details open><summary>Ürün hakkında <span>+</span></summary><p>{product.story}</p></details></div>}
       </div>
     </section>
     <section className="section"><div className="container"><div className="section-heading"><div><p className="eyebrow">KEŞFE DEVAM EDİN</p><h2>Belki de <em>bir sonraki kokunuz.</em></h2></div><Link className="text-link" href="/urun-katalogu">Tüm koleksiyon <FiArrowUpRight /></Link></div><div className="product-grid related-grid">{related.map(item => <ProductCard product={item} key={item.id} />)}</div><p className="catalogue-footnote">Ürün ve görseller koleksiyon konsepti için hazırlanmıştır. Nihai formül, ambalaj ve bulunabilirlik bilgileri marka tarafından teyit edilir.</p></div></section>
