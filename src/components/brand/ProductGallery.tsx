@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FiChevronLeft, FiChevronRight, FiX, FiZoomIn, FiZoomOut } from 'react-icons/fi';
 import type { Product } from '@/data/products';
 import { getProductImages } from '@/lib/productImages';
+import { usePhotoSwipe } from '@/lib/photoSwipe';
 
 export default function ProductGallery({ product }: { product: Product }) {
   const photos = getProductImages(product);
@@ -12,11 +13,11 @@ export default function ProductGallery({ product }: { product: Product }) {
   const [open, setOpen] = useState(false);
   const [magnified, setMagnified] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
-  const touchX = useRef<number | null>(null);
-  const swiped = useRef(false);
   const multiple = photos.length > 1;
   const source = photos[selected] || product.image;
   const move = (step: number) => { setSelected(current => (current + step + photos.length) % photos.length); setMagnified(false); };
+  const photoSwipe = usePhotoSwipe(move, multiple);
+  const enlargedSwipe = usePhotoSwipe(move, multiple && !magnified);
 
   useEffect(() => {
     if (!open) return;
@@ -26,7 +27,7 @@ export default function ProductGallery({ product }: { product: Product }) {
   }, [open]);
 
   function enlarge() {
-    if (swiped.current) { swiped.current = false; return; }
+    if (!photoSwipe.allowClick()) return;
     setMagnified(false);
     dialog.current?.showModal();
     setOpen(true);
@@ -39,13 +40,9 @@ export default function ProductGallery({ product }: { product: Product }) {
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); move(event.key === 'ArrowRight' ? 1 : -1); }
       if (event.key === 'Home' || event.key === 'End') { event.preventDefault(); setSelected(event.key === 'Home' ? 0 : photos.length - 1); }
     }}>
-    <div className="product-detail-photo" onTouchStart={event => { touchX.current = event.touches[0]?.clientX ?? null; swiped.current = false; }}
-      onTouchEnd={event => {
-        const end = event.changedTouches[0]?.clientX;
-        if (multiple && end !== undefined && touchX.current !== null && Math.abs(end - touchX.current) > 45) { swiped.current = true; move(end < touchX.current ? 1 : -1); }
-        touchX.current = null;
-      }}>
-      <button type="button" className="product-photo-open" aria-label={`${product.name} — ${selected + 1}. fotoğrafı büyüt`} aria-haspopup="dialog" onClick={enlarge}>
+    <div className="product-detail-photo">
+      <button type="button" className="product-photo-open" aria-label={`${product.name} — ${selected + 1}. fotoğrafı büyüt`} aria-haspopup="dialog" onClick={enlarge}
+        onPointerDown={photoSwipe.onPointerDown} onPointerUp={photoSwipe.onPointerUp} onPointerCancel={photoSwipe.onPointerCancel}>
         <Image src={source} alt={`${product.name} — ${selected + 1}. ürün fotoğrafı`} fill priority={selected === 0} sizes="(max-width: 760px) 100vw, 48vw" draggable={false} />
         <span className="product-zoom-hint"><FiZoomIn /> Büyüt</span>
       </button>
@@ -65,14 +62,16 @@ export default function ProductGallery({ product }: { product: Product }) {
       }}>
       {open && <div className="product-lightbox-content">
         <header className="product-lightbox-header"><h2>{product.name}</h2><span aria-live="polite">{selected + 1} / {photos.length}</span><button type="button" aria-label={magnified ? 'Fotoğrafı küçült' : 'Fotoğrafı yakınlaştır'} aria-pressed={magnified} onClick={() => setMagnified(value => !value)}>{magnified ? <FiZoomOut /> : <FiZoomIn />}</button><button type="button" autoFocus aria-label="Büyük fotoğrafı kapat" onClick={close}><FiX /></button></header>
-        <div className="product-zoom-stage" key={`${selected}-${magnified}`} ref={node => {
+        <div className={`product-zoom-stage${magnified ? ' is-magnified' : ''}`} key={`${selected}-${magnified}`} ref={node => {
           if (node && magnified) { node.scrollLeft = (node.scrollWidth - node.clientWidth) / 2; node.scrollTop = (node.scrollHeight - node.clientHeight) / 2; }
         }}>
-          <button type="button" className={`product-zoom-image${magnified ? ' magnified' : ''}`} aria-label={magnified ? 'Fotoğrafı küçült' : 'Fotoğrafı yakınlaştır'} onClick={() => setMagnified(value => !value)}>
+          <button type="button" className={`product-zoom-image${magnified ? ' magnified' : ''}`} aria-label={magnified ? 'Fotoğrafı küçült' : 'Fotoğrafı yakınlaştır'}
+            onPointerDown={enlargedSwipe.onPointerDown} onPointerUp={enlargedSwipe.onPointerUp} onPointerCancel={enlargedSwipe.onPointerCancel}
+            onClick={() => { if (enlargedSwipe.allowClick()) setMagnified(value => !value); }}>
             <Image src={source} alt={`${product.name} — ${selected + 1}. fotoğraf, büyük görünüm`} fill unoptimized sizes="100vw" draggable={false} />
           </button>
         </div>
-        <footer className="product-lightbox-footer">{multiple && <button type="button" aria-label="Büyük görünümde önceki fotoğraf" onClick={() => move(-1)}><FiChevronLeft /></button>}<p>{magnified ? 'Kaydırarak fotoğrafın ayrıntılarını inceleyin. Tekrar tıklayarak küçültün.' : 'Fotoğrafa tıklayarak yakınlaştırın.'}</p>{multiple && <button type="button" aria-label="Büyük görünümde sonraki fotoğraf" onClick={() => move(1)}><FiChevronRight /></button>}</footer>
+        <footer className="product-lightbox-footer">{multiple && <button type="button" aria-label="Büyük görünümde önceki fotoğraf" onClick={() => move(-1)}><FiChevronLeft /></button>}<p>{magnified ? 'Kaydırarak fotoğrafın ayrıntılarını inceleyin. Tekrar tıklayarak küçültün.' : multiple ? 'Fotoğraflar arasında yana kaydırın. Yakınlaştırmak için fotoğrafa dokunun.' : 'Yakınlaştırmak için fotoğrafa dokunun.'}</p>{multiple && <button type="button" aria-label="Büyük görünümde sonraki fotoğraf" onClick={() => move(1)}><FiChevronRight /></button>}</footer>
       </div>}
     </dialog>
   </div>;

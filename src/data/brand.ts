@@ -8,7 +8,7 @@ export const business = {
 };
 export const navigation = [
   { label: 'Ana Sayfa', href: '/' },
-  { label: 'Hikâyemiz', href: '/hakkimizda' },
+  { label: 'Hakkımızda', href: '/hakkimizda' },
   { label: 'Ürün Kataloğu', href: '/urun-katalogu' },
   { label: 'Koku Günlüğü', href: '/haberler' },
 ];
