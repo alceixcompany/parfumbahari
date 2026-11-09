@@ -9,6 +9,9 @@ export type ProductRecord = Product & { brand: string };
 // All photos and the product commit together; failed saves leave no partial uploads.
 export async function saveProduct(database: Firestore, product: ProductRecord, existingId: string, selected: PreparedImage | PreparedImage[] | null) {
   const slug = product.slug;
+  if (!product.name.trim() || product.name.trim().length > 100) throw new Error('1–100 karakter arasında bir ürün adı girin.');
+  if (!Number.isInteger(product.order) || product.order < 0 || product.order > 9999) throw new Error('Sıra numarası 0–9999 arasında bir tam sayı olmalı.');
+  if (product.subcategoryId && !product.categoryId) throw new Error('Alt kategori için önce bir ana kategori seçin.');
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 100) throw new Error('Geçerli bir bağlantı adı girin.');
   if (!isProductImage(product.image)) throw new Error('Lütfen bir ürün fotoğrafı seçin.');
   const photos = product.images ?? [product.image];

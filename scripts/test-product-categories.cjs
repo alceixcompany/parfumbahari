@@ -1,0 +1,27 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+require.extensions['.ts'] = (module, filename) => {
+  const ts = require('typescript');
+  module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText, filename);
+};
+const { productClassification, mergeProductCategories, availableCategories } = require('../src/lib/productCategories.ts');
+const { normalizeProduct } = require('../src/lib/normalizeProduct.ts');
+const legacy = name => ({ name, concentration: '' });
+assert.deepEqual(productClassification(legacy('Tom Ford Oud Wood Edp 100 ML Erkek Parfüm')), { categoryId: 'erkek', subcategoryId: 'erkek-edp', fragranceBrand: 'Tom Ford' });
+assert.equal(productClassification(legacy('Amouage Guidance Edp 100 ml Kadın Outlet Parfüm')).categoryId, 'kadin');
+assert.equal(productClassification(legacy('Creed Original Vetiver EDP UNİSEX 100 ML')).categoryId, 'unisex');
+assert.equal(productClassification(legacy('Calvin Klein Euphoria EDT Erkek 100 ML')).subcategoryId, 'erkek-edt');
+assert.equal(productClassification(legacy('Dior Homme Le Parfum Erkek')).subcategoryId, 'erkek-extrait');
+assert.equal(productClassification({ ...legacy('Tom Ford Oud Wood Edp Erkek'), categoryId: 'ozel', subcategoryId: 'ozel-nis', fragranceBrand: 'Özel marka' }).subcategoryId, 'ozel-nis');
+assert.deepEqual(productClassification({ ...legacy('Tom Ford Oud Wood Edp Erkek'), categoryId: '', subcategoryId: '', fragranceBrand: '' }), { categoryId: '', subcategoryId: '', fragranceBrand: '' });
+const categories = mergeProductCategories([{ id: 'kadin', name: 'Kadın', parentId: '', order: 0, isActive: false }, { id: 'erkek-nis', name: 'Niş Parfümler', parentId: 'erkek', order: 4, isActive: true }]);
+assert.equal(categories.filter(item => item.id === 'kadin').length, 1);
+assert(!availableCategories(categories).some(item => item.id === 'kadin' || item.parentId === 'kadin'));
+assert(availableCategories(categories).some(item => item.id === 'erkek-nis'));
+const malformed = normalizeProduct({ id: 'legacy', name: null, story: 42, description: 'Eski açıklama', image: 'bad-url', images: [null, { src: 'bad' }, '/parfum-bahari/rose.webp'], order: 'NaN', isActive: true });
+assert.equal(malformed.image, '/parfum-bahari/rose.webp');
+assert.equal(malformed.name, 'İsimsiz parfüm');
+assert.equal(malformed.order, 0);
+assert.equal(malformed.story, 'Eski açıklama');
+assert.equal(malformed.slug, 'legacy');
+console.log('PASS: legacy category/brand inference, explicit overrides, hidden parent hierarchy and malformed product normalization.');

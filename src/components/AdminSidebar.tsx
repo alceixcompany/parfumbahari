@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { FiGrid, FiImage, FiFileText, FiSettings, FiLogOut, FiX, FiMenu, FiArrowUpRight, FiPackage } from 'react-icons/fi';
+import { FiGrid, FiImage, FiFileText, FiSettings, FiLogOut, FiX, FiMenu, FiArrowUpRight, FiPackage, FiLayers } from 'react-icons/fi';
 import BrandMark from './BrandMark';
 import { useAuth } from '@/hooks/useAuth';
-const links = [{ href: '/admin', label: 'Genel bakış', icon: FiGrid }, { href: '/admin/urunler', label: 'Ürün kataloğu', icon: FiPackage }, { href: '/admin/haberler', label: 'Blog & haberler', icon: FiFileText }, { href: '/admin/galeri', label: 'Galeri', icon: FiImage }, { href: '/admin/ayarlar', label: 'Hesap ayarları', icon: FiSettings }];
+const links = [{ href: '/admin', label: 'Genel bakış', icon: FiGrid }, { href: '/admin/urunler', label: 'Ürün kataloğu', icon: FiPackage, FiLayers }, { href: '/admin/kategoriler', label: 'Kategoriler', icon: FiLayers }, { href: '/admin/haberler', label: 'Blog', icon: FiFileText }, { href: '/admin/galeri', label: 'Galeri', icon: FiImage }, { href: '/admin/ayarlar', label: 'Hesap ayarları', icon: FiSettings }];
 export default function AdminSidebar() {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');

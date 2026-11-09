@@ -4,19 +4,10 @@ import starter from '@/data/starter-content.json';
 import { products, type Product } from '@/data/products';
 import type { BlogPost } from '@/data/blogPosts';
 import { CONTENT_SOURCE } from './contentSource';
-import { getProductImages } from './productImages';
 export type GalleryContent = { id: string; src: string; title: string; tag: string; description: string; order: number; featured: boolean; illustrative: boolean };
-type Value = { stringValue?: string; booleanValue?: boolean; integerValue?: string; doubleValue?: number; timestampValue?: string; arrayValue?: { values?: Value[] }; mapValue?: { fields?: Record<string, Value> } };
-function unpack(value: Value): unknown {
-  if ('stringValue' in value) return value.stringValue;
-  if ('booleanValue' in value) return value.booleanValue;
-  if ('integerValue' in value) return Number(value.integerValue);
-  if ('doubleValue' in value) return value.doubleValue;
-  if ('timestampValue' in value) return value.timestampValue;
-  if ('arrayValue' in value) return (value.arrayValue?.values || []).map(unpack);
-  if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue?.fields || {}).map(([k, v]) => [k, unpack(v)]));
-  return null;
-}
+import { unpack, type FirestoreValue as Value } from './firestoreValues';
+import { normalizeProduct } from './normalizeProduct';
+import { mergeProductCategories, type ProductCategory } from './productCategories';
 export const readPublishedCollection = cache(async (collection: string): Promise<Array<Record<string, unknown> & { id: string }>> => {
   if (CONTENT_SOURCE === 'static') {
     const data = collection === 'products' ? products : starter[collection as keyof typeof starter] || [];
@@ -26,7 +17,7 @@ export const readPublishedCollection = cache(async (collection: string): Promise
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
   if (!project || !apiKey) return [];
   try {
-    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents:runQuery?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ structuredQuery: { from: [{ collectionId: collection }], where: { fieldFilter: { field: { fieldPath: 'isActive' }, op: 'EQUAL', value: { booleanValue: true } } } } }), cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    const response = await fetch(`https://firestore.googleapis.com/v1/projects/${project}/databases/(default)/documents:runQuery?key=${apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ structuredQuery: { from: [{ collectionId: collection }], ...(collection !== 'product_categories' ? { where: { fieldFilter: { field: { fieldPath: 'isActive' }, op: 'EQUAL', value: { booleanValue: true } } } } : {}) } }), cache: 'no-store', signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error(String(response.status));
     const rows = await response.json() as Array<{ document?: { name: string; fields?: Record<string, Value> } }>;
     return rows.flatMap(({ document }) => document ? [{ ...Object.fromEntries(Object.entries(document.fields || {}).map(([k, v]) => [k, unpack(v)])), id: document.name.split('/').pop() || '' }] : []).filter(item => (item as Record<string, unknown>).brand === 'parfum-bahari');
@@ -38,20 +29,11 @@ export const readPublishedCollection = cache(async (collection: string): Promise
 });
 export const getPublishedProducts = cache(async (): Promise<Product[]> => {
   const rows = await readPublishedCollection('products');
-  return rows.filter(item => typeof item.slug === 'string' && typeof item.name === 'string').map(item => {
-    const images = getProductImages({ image: String(item.image || ''), images: Array.isArray(item.images) ? item.images : [] });
-    return {
-      id: item.id, slug: String(item.slug), name: String(item.name),
-      story: String(item.story || ''), concentration: String(item.concentration || ''),
-      mood: String(item.mood || ''), season: String(item.season || ''), badge: String(item.badge || ''),
-      featured: item.featured === true, isActive: item.isActive === true, order: Number(item.order || 0),
-      image: images[0] || '/parfum-bahari/hero.webp', images,
-    } as Product;
-  }).sort((a, b) => a.order - b.order);
+  return rows.filter(item => typeof item.slug === 'string' && typeof item.name === 'string').map(normalizeProduct).sort((a, b) => a.order - b.order);
 });
 export const getPublishedProduct = cache(async (slug: string) => (await getPublishedProducts()).find(item => item.slug === slug));
 export const getPublishedPosts = cache(async (): Promise<BlogPost[]> => (await readPublishedCollection('haberler')).filter(item => typeof item.title === 'string' && typeof item.slug === 'string').map(item => ({
-  modifiedDate: typeof item.updatedAt === 'string' ? item.updatedAt : undefined, slug: String(item.slug), title: String(item.title), category: String(item.category || 'Koku Günlüğü'), readTime: String(item.readTime || '3 dk okuma'), excerpt: String(item.excerpt || item.description || ''), image: safeImage(String(item.imageUrl || item.image || '')), publishedDate: String(item.publishedDate || item.createdAt || '').slice(0, 10), publishedAt: String(item.publishedDate || item.createdAt || '').slice(0, 10), paragraphs: String(item.content || '').split(/\n\s*\n/).filter(Boolean), tips: [], featured: item.featured === true, illustrative: item.illustrative === true, author: 'Parfum Bahari',
+  modifiedDate: typeof item.updatedAt === 'string' ? item.updatedAt : undefined, slug: String(item.slug), title: String(item.title), category: String(item.category || 'Blog'), readTime: String(item.readTime || '3 dk okuma'), excerpt: String(item.excerpt || item.description || ''), image: safeImage(String(item.imageUrl || item.image || '')), publishedDate: String(item.publishedDate || item.createdAt || '').slice(0, 10), publishedAt: String(item.publishedDate || item.createdAt || '').slice(0, 10), paragraphs: String(item.content || '').split(/\n\s*\n/).filter(Boolean), tips: [], featured: item.featured === true, illustrative: item.illustrative === true, author: 'Parfum Bahari',
 })).sort((a, b) => b.publishedDate.localeCompare(a.publishedDate)));
 export const getPublishedPost = cache(async (slug: string) => (await getPublishedPosts()).find(post => post.slug === slug));
 export async function getPublishedGallery(): Promise<GalleryContent[]> {
@@ -62,3 +44,8 @@ export async function getPublishedGallery(): Promise<GalleryContent[]> {
 export function safeImage(src: string) {
   return /^\/api\/media\/[a-f0-9-]{36}$/.test(src) || /^\/parfum-bahari\/[a-z0-9-]+\.(webp|png|jpg)$/.test(src) || /^https:\/\//i.test(src) ? src : '/parfum-bahari/hero.webp';
 }
+
+export const getPublishedProductCategories = cache(async (): Promise<ProductCategory[]> => {
+  const rows = CONTENT_SOURCE === 'static' ? [] : await readPublishedCollection('product_categories');
+  return mergeProductCategories(rows.filter(item => typeof item.name === 'string').map(item => ({ id: item.id, name: String(item.name), parentId: String(item.parentId || ''), order: Number(item.order || 0), isActive: item.isActive === true })));
+});

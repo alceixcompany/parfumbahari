@@ -29,3 +29,13 @@ Firebase modunda genel sayfalar yalnızca yayındaki Parfum Bahari kayıtların�
 - `npm run check:site`: çalışan sunucuda sayfa, bağlantı, görsel ve SEO kontrolleri. Firebase modunda başlangıç içeriği önceden aktarılmış olmalıdır.
 
 Statik önizleme için `NEXT_PUBLIC_CONTENT_SOURCE=static` ayarlanıp uygulama yeniden başlatılabilir. Üretimden önce `NEXT_PUBLIC_SITE_URL` gerçek HTTPS alan adıyla doldurulmalıdır.
+
+## Kategori yönetimi
+
+`product_categories` iki seviyeli bir ağaçtır: `parentId` boşsa ana kategori, aksi hâlde bir ana kategoriye bağlı alt kategoridir. Belgelerde yalnızca herkese açık ad, bağlı kategori, sıralama ve görünürlük ayarları tutulur. Gizli kategori tanımları da okunabilir; bunlar kategori ağacında gösterilmez. Gizli ana kategorinin alt kategorileri de gizlenir. Ürünlerin taslak/yayın erişim kuralları değişmez.
+
+Varsayılan kategori ağacı kodda tanımlıdır. `product_categories` içindeki aynı kimlikli belgeler bu tanımları geçersiz kılar; böylece varsayılan bir kategori de gizlenebilir. Kategori silmek yerine gizlemek ürün bağlantılarını korur. Yeni alt kategori varsayılan bir ana kategoriye bağlanırken eksik ana kategori belgesi aynı transaction içinde oluşturulur. Üçüncü seviyeye ve kendisine bağlamaya kurallar izin vermez.
+
+Ürünlerde isteğe bağlı `categoryId`, `subcategoryId` ve `fragranceBrand` alanları kullanılır. Eski ürünlerin adlarından çıkarılan eşleşmeler kayda yazılmadan arayüzde çalışır; yönetici kaydettiğinde açık alanlar saklanır. `brand: parfum-bahari` içerik aidiyetini korur ve parfüm markasıyla karıştırılmaz.
+
+Yönetici listeleme uç noktası `/api/admin/collections/[name]` yalnızca ürünler ve ürün kategorileri için açıktır. İmzalı yönetici çerezi yanında Firebase ID token ister ve tokenı Firestore'a iletir; belge erişimleri Firebase kurallarıyla doğrulanır. Yanıtlar önbelleğe alınmaz. Çerez veya token olmadan ürün listesi okunamaz.

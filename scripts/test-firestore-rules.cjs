@@ -123,6 +123,30 @@ await assert.rejects(saveProduct(trusted,{...multi,slug:'atomic-multiple-failure
 assert.equal((await getDoc(doc(trusted,'products','atomic-multiple-failure'))).exists(),false);
 assert.equal((await getDoc(doc(trusted,'media',atomicId))).exists(),false);
 checks+=20;
+// Categories form a two-level tree; public labels are readable but only admins write.
+const category={name:'Kadın Parfüm',parentId:'',order:0,isActive:true,brand:'parfum-bahari',updatedAt:new Date().toISOString()};
+await assertFails(setDoc(doc(guest,'product_categories','kadin'),category));
+await assertFails(setDoc(doc(outsider,'product_categories','kadin'),category));
+await assertSucceeds(setDoc(doc(trusted,'product_categories','kadin'),category));
+await assertSucceeds(setDoc(doc(trusted,'product_categories','kadin-edp'),{...category,name:'Eau de Parfum',parentId:'kadin'}));
+await assertSucceeds(getDocs(collection(guest,'product_categories')));
+await assertFails(setDoc(doc(trusted,'product_categories','orphan'),{...category,parentId:'missing'}));
+await assertFails(setDoc(doc(trusted,'product_categories','self'),{...category,parentId:'self'}));
+await assertFails(setDoc(doc(trusted,'product_categories','third-level'),{...category,parentId:'kadin-edp'}));
+await assertFails(setDoc(doc(trusted,'product_categories','wrong-type'),{...category,order:'1'}));
+await assertFails(setDoc(doc(trusted,'product_categories','extra'),{...category,secret:'private'}));
+await assertFails(setDoc(doc(trusted,'product_categories','other-brand'),{...category,brand:'other'}));
+await assertSucceeds(updateDoc(doc(trusted,'product_categories','kadin'),{isActive:false}));
+assert.equal((await getDoc(doc(guest,'product_categories','kadin'))).data().isActive,false);
+await assertFails(deleteDoc(doc(trusted,'product_categories','kadin')));
+const categoryBatch=writeBatch(trusted);
+categoryBatch.set(doc(trusted,'product_categories','erkek'),{...category,name:'Erkek Parfüm'});
+categoryBatch.set(doc(trusted,'product_categories','erkek-nis'),{...category,name:'Niş Parfümler',parentId:'erkek'});
+await assertSucceeds(categoryBatch.commit());
+await assertSucceeds(saveProduct(trusted,{...uploadedProduct,categoryId:'erkek',subcategoryId:'erkek-nis',fragranceBrand:'Tom Ford'},'uploaded-product',[]));
+const classifiedProduct=(await getDoc(doc(trusted,'products','uploaded-product'))).data();
+assert.equal(classifiedProduct.categoryId,'erkek');assert.equal(classifiedProduct.subcategoryId,'erkek-nis');assert.equal(classifiedProduct.fragranceBrand,'Tom Ford');
+checks+=16;
 console.log('PASS:',checks,'Firestore rule and content lifecycle checks. Server-only admin provisioning, public filters, draft privacy, admin CRUD, disabled contact forms, primary admin UID, computer image uploads, image limits, immutable media, cover selection, legacy single-photo compatibility, removed product fields, and atomic multi-photo saves verified.');
 }finally{await env.cleanup();}
 })().catch(e=>{console.error(e);process.exit(1)});

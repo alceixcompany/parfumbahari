@@ -38,6 +38,23 @@ service cloud.firestore {
     }
 
     // Parfüm kataloğu: taslakları yalnızca yöneticiler görebilir.
+    // Category definitions contain public labels only; inactive overrides hide built-in categories.
+    match /product_categories/{docId} {
+      allow read: if true;
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name', 'parentId', 'order', 'isActive', 'brand', 'updatedAt'])
+        && validText(request.resource.data.name, 100)
+        && request.resource.data.parentId is string
+        && request.resource.data.parentId != docId
+        && request.resource.data.order is int && request.resource.data.order >= 0 && request.resource.data.order <= 9999
+        && request.resource.data.isActive is bool
+        && request.resource.data.brand == 'parfum-bahari'
+        && (request.resource.data.parentId == ''
+          || (existsAfter(/databases/$(database)/documents/product_categories/$(request.resource.data.parentId))
+            && getAfter(/databases/$(database)/documents/product_categories/$(request.resource.data.parentId)).data.parentId == ''));
+      allow delete: if false;
+    }
+
     match /products/{docId} {
       allow read: if isAdmin() || resource.data.isActive == true;
       allow create, update, delete: if isAdmin();

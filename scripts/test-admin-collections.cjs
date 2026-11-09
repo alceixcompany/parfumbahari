@@ -1,0 +1,51 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const ts = require('typescript');
+const root = path.resolve(__dirname, '..');
+let session;
+require.extensions['.ts'] = (module, filename) => {
+  const original = module.require;
+  module.require = function (id) {
+    if (id === 'next/headers') return { cookies: async () => ({ get: () => session ? { value: session } : undefined }) };
+    return original.call(this, id.startsWith('@/') ? path.join(root, 'src', id.slice(2) + '.ts') : id);
+  };
+  module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true } }).outputText, filename);
+};
+if (!global.crypto) global.crypto = require('node:crypto').webcrypto;
+process.env.NEXT_PUBLIC_CONTENT_SOURCE = 'firebase';
+process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = 'demo-parfum-bahari';
+process.env.NEXT_PUBLIC_FIREBASE_API_KEY = 'test-only';
+process.env.ADMIN_SESSION_SECRET = 'local-test-session-secret-012345678901234567890123456789';
+const { GET } = require('../src/app/api/admin/collections/[name]/route.ts');
+const { createAdminSessionToken } = require('../src/lib/adminSession.ts');
+const request = auth => new Request('http://localhost/api/admin/collections/products', { headers: auth ? { Authorization: 'Bearer firebase-test-token' } : {} });
+const params = name => ({ params: Promise.resolve({ name }) });
+let calls = 0;
+global.fetch = async (_url, options) => {
+  calls++;
+  assert.equal(options.headers.Authorization, 'Bearer firebase-test-token');
+  assert.equal(options.cache, 'no-store');
+  return Response.json([{ document: { name: 'projects/demo/databases/(default)/documents/products/draft', fields: { brand: { stringValue: 'parfum-bahari' }, isActive: { booleanValue: false }, images: { arrayValue: { values: [{ stringValue: '/parfum-bahari/rose.webp' }] } } } } }, { document: { name: 'projects/demo/databases/(default)/documents/products/other-brand', fields: { brand: { stringValue: 'other' } } } }]);
+};
+(async () => {
+  assert.equal((await GET(request(true), params('products'))).status, 401);
+  session = 'tampered';
+  assert.equal((await GET(request(true), params('products'))).status, 401);
+  session = await createAdminSessionToken('test-admin', process.env.ADMIN_SESSION_SECRET);
+  assert.equal((await GET(request(false), params('products'))).status, 401);
+  assert.equal((await GET(request(true), params('admins'))).status, 404);
+  assert.equal(calls, 0);
+  const response = await GET(request(true), params('products'));
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('cache-control'), 'private, no-store');
+  const { items } = await response.json();
+  assert.equal(items.length, 1);
+  assert.equal(items[0].isActive, false);
+  assert.deepEqual(items[0].images, ['/parfum-bahari/rose.webp']);
+  global.fetch = async () => Response.json({ error: 'PERMISSION_DENIED' }, { status: 403 });
+  assert.equal((await GET(request(true), params('products'))).status, 403);
+  global.fetch = async () => { throw new Error('Timeout'); };
+  assert.equal((await GET(request(true), params('product_categories'))).status, 503);
+  console.log('PASS: admin collection session gate, Firebase authorization forwarding, brand isolation, draft access, no caching, permission denial and timeout.');
+})().catch(error => { console.error(error); process.exitCode = 1; });

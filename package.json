@@ -10,7 +10,8 @@
     "seed:firebase": "node scripts/seed-firebase-content.mjs",
     "provision:firebase": "node scripts/provision-firebase.mjs",
     "test:rules": "firebase emulators:exec --only firestore --project demo-parfum-bahari --config firebase.test.json \"node scripts/test-firestore-rules.cjs\"",
-    "check:site": "node scripts/check-site.mjs"
+    "check:site": "node scripts/check-site.mjs",
+    "test": "node scripts/test-admin-session.cjs && node scripts/test-admin-collections.cjs && node scripts/test-initial-content.cjs && node scripts/test-photo-swipe.cjs && node scripts/test-product-categories.cjs"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",

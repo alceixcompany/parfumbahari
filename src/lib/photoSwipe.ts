@@ -10,7 +10,7 @@ export function usePhotoSwipe(onSwipe: (step: number) => void, enabled: boolean)
   const start = useRef<{ id: number; x: number; y: number; navigate: boolean } | null>(null);
   const suppressClickUntil = useRef(0);
   return {
-    onPointerDown(event: PointerEvent<HTMLButtonElement>) {
+    onPointerDown(event: PointerEvent<HTMLElement>) {
       if (!event.isPrimary) {
         start.current = null;
         suppressClickUntil.current = Date.now() + 500;
@@ -21,7 +21,7 @@ export function usePhotoSwipe(onSwipe: (step: number) => void, enabled: boolean)
       suppressClickUntil.current = 0;
       event.currentTarget.setPointerCapture(event.pointerId);
     },
-    onPointerUp(event: PointerEvent<HTMLButtonElement>) {
+    onPointerUp(event: PointerEvent<HTMLElement>) {
       const gesture = start.current;
       start.current = null;
       if (!gesture || gesture.id !== event.pointerId) return;
