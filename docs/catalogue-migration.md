@@ -10,9 +10,9 @@ Kullanıcının sağladığı mevcut yönetici hesabıyla normal Firebase Auth g
 
 - İlk atomik işlem 140 belgeyi güncelledi: 113 üründe kategori kimliği standartlaştırıldı, 27 üründeki `subcategoryId` ve `fragranceBrand` alanları temizlendi.
 - İkinci atomik işlem, kaynaklardan kontrol edilen üç yayındaki ürünün kategorisini tamamladı: Givenchy L’Interdit Absolu → Unisex ([Givenchy](https://www.givenchybeauty.com/us/p/l-interdit-absolu-P000218.html)), Grand Soir → Unisex ([Luckyscent](https://www.luckyscent.com/products/grand-soir-by-maison-francis-kurkdjian)), Prada Paradigme → Bay ([Prada Beauty](https://www.prada-beauty.com/fragrance/paradigme/paradigme-eau-de-parfum/3614274182897.html)). Bu elle incelenmiş plan, otomatik eşleme kuralına eklenmedi; kategori seçimi ve kaynakları ayrı yedekte tutuldu.
-- Toplam 143 farklı belge değişti. Yayındaki 142 ürünün tamamı Bay/Bayan/Unisex kategorilerinden birine bağlı. Kategorisi belirsiz altı eski örnek ürün taslak olarak bırakıldı; yayına alınmadı.
+- Toplam 143 farklı belge değişti. Yayındaki 142 ürünün tamamı kategorilere bağlı: 55 Bay, 68 Bayan ve 19 Unisex. Kategorisi belirsiz altı eski örnek ürün taslak olarak bırakıldı; yayına alınmadı.
 - İlk işlem sonrasında 149 ürünün bütün alanları özgün yedekle karşılaştırıldı: yalnızca planlanan alanlar ve `updatedAt` değişti. Yeniden kuru çalıştırmada sıfır otomatik değişiklik kaldı. İkinci işlemdeki üç belge ayrıca tekrar okunup aynı şekilde doğrulandı.
-- Canlı admin panelinde Prada kaydı açıldı; kayıtlı ana kategorisi Erkek Parfüm olarak doğrulandı. Canlı panel hâlâ önceki uygulama sürümünü çalıştırıyor; eski alt kategori/marka kontrollerinin kaldırılması ve kota iyileştirmeleri, yeni kaynak sürümü dağıtıldığında geçerli olur.
+- `01505d10` ana dala gönderildi ve yeni sürümün canlıya yansıdığı doğrulandı. Canlı admin panelinde Prada kaydı yeniden açıldı: kategori Bay, seçenekler yalnızca Bay/Bayan/Unisex; alt kategori ve marka kontrolleri yok. Ana sayfada yeni iki hikâye görseli mevcut, kaldırılan saklama sorusu yok. Ekran görüntüsü `artifacts/catalogue-migration/live-admin-category.jpg` dosyasında tutulur.
 
 Git dışında `artifacts/catalogue-migration/` altında özel izinlerle tutulan kayıtlar:
 

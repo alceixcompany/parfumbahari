@@ -4,7 +4,8 @@
 - Yayındaki 142 ürünün tamamı Bay/Bayan/Unisex modeline bağlı. 7 taslak yayına alınmadı; bunların altı eski örnek ürünü kategorisi belirsiz olarak taslakta kaldı.
 - İlk atomik işlem sonrasında 149 belge özgün yedekle alan alan karşılaştırıldı. İkinci işlemdeki üç belge yeniden okunup karşılaştırıldı. Yalnızca planlanan kategori/eski alan temizliği ve `updatedAt` değişti; adlar, URL’ler, görseller ve yayın durumları korundu.
 - Tekrar kuru çalıştırmada otomatik değişiklik sayısı sıfırdı. Canlı admin panelinde Prada ürününün Erkek Parfüm kategorisi doğrulandı. Parola/token dosyalara kaydedilmedi; güvenlik kuralları veya erişim rolleri değiştirilmedi.
-- Yedekler, işlem makbuzları, kaynaklar ve geri alma yöntemi `docs/catalogue-migration.md` içinde açıklanır. Canlı panelin önceki uygulama sürümündeki alt kategori/marka kontrolleri yeni kaynak sürümünün dağıtımını gerektiriyor.
+- `01505d10` ana dala gönderildi ve canlı sürüm doğrulandı: Prada düzenleyicisinde yalnızca Bay/Bayan/Unisex kategorileri var; alt kategori ve marka alanları yok. Yeni hikâye görselleri ana sayfada mevcut, kaldırılan saklama sorusu yok. Canlı panelin ekran görüntüsü `artifacts/catalogue-migration/live-admin-category.jpg` dosyasında saklanır.
+- Yedekler, işlem makbuzları, kaynaklar ve geri alma yöntemi `docs/catalogue-migration.md` içinde açıklanır. Son dağılım: 55 Bay, 68 Bayan, 19 Unisex; toplam 142 yayındaki ürün ve 7 taslak.
 
 ---
 
