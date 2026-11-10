@@ -4,7 +4,7 @@ const base = process.argv.find(arg => /^https?:/.test(arg)) || 'http://localhost
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url)));
 const starter = JSON.parse(readFileSync(new URL('../src/data/starter-content.json', import.meta.url)));
 const names = new Set();
-const images = new Set(['/parfum-bahari/hero.webp', '/parfum-bahari/hero-branded.webp', '/parfum-bahari/hero-trio.webp', '/parfum-bahari/logo-horizontal-v2.png']);
+const images = new Set(['/parfum-bahari/hero.webp', '/parfum-bahari/hero-branded.webp', '/parfum-bahari/hero-trio.webp', '/parfum-bahari/story-naxos.png', '/parfum-bahari/story-erba-pura.png', '/parfum-bahari/logo-horizontal-v2.png']);
 for (const product of products) {
   assert(!names.has(product.slug), `Duplicate product slug ${product.slug}`); names.add(product.slug);
   assert(product.images.length > 0 && product.images.includes(product.image)); images.add(product.image);
@@ -26,8 +26,9 @@ for (const path of pages) {
   assert.match(html, /<html[^>]*lang="tr"/); assert.equal((html.match(/<h1\b/g) || []).length, 1, `${path}: one H1`);
   assert.match(html, /<title>[^<]*Parfum Bahari[^<]*<\/title>/); assert.match(html, /<meta name="description"/); assert.match(html, /<link rel="canonical"/);
   assert(!/<a\b[^>]*href="\/iletisim/.test(html), `${path}: removed contact link`);
+  if (path === '/urun-katalogu') { assert(!html.includes('catalogue-subcategory')); assert(!html.includes('catalogue-brand')); assert(html.includes('Bayan')); assert(html.includes('Bay')); assert(html.includes('Unisex')); }
   if (path === '/urun-katalogu' || path.startsWith('/urun-katalogu/')) assert(!/class="(?:size-selector|note-pyramid|product-family-control)"/.test(html), `${path}: obsolete product controls`);
-  if (path === '/') { assert(html.includes('hero-branded.webp')); assert(html.includes('hero-slider-dots')); assert(!html.includes('Önceki slayt')); assert(html.includes('/parfum-bahari/logo')); }
+  if (path === '/') { assert(html.includes('story-naxos.png')); assert(html.includes('story-erba-pura.png')); assert(!html.includes('Parfümümü nasıl saklamalıyım?')); assert(html.includes('hero-branded.webp')); assert(html.includes('hero-slider-dots')); assert(!html.includes('Önceki slayt')); assert(html.includes('/parfum-bahari/logo')); }
   if (path.startsWith('/urun-katalogu/')) { assert(!/class="detail-subtitle"|class="detail-description"/.test(html)); assert(html.includes('fotoğrafı büyüt')); }
   assert(!/Light Barbershop|Centereach|Sunny Life|Gümüşoğlu|whitebarbar/.test(html), `${path}: stale brand content`);
   schemas += schemasFrom(html).length;

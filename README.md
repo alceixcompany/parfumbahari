@@ -43,16 +43,34 @@ Gerçek HTTPS alan adını `NEXT_PUBLIC_SITE_URL` ile ayarlayın. Alan adı doğ
 
 Görsel üretim yöntemi ve istemleri [görsel notlarında](docs/assets.md) bulunur.
 
-## 9 Kasım 2026 güncellemesi
+## Güncel arayüz — 10 Kasım 2026
 
-- Menüde ve sayfalarda Blog adı kullanılır; mevcut `/haberler` adresleri korunur.
+- Blog bağlantısı ana menüden kaldırılmıştır; mevcut `/haberler` sayfaları ve yönetimi korunur.
 - `logo-horizontal-v2.png` arka plansız yeni yatay logodur. Yanında ayrı yazı veya slogan gösterilmez. Üretim istemi `docs/assets.md` içindedir.
 - Hero üç slayt arasında otomatik kayar; dokunarak kaydırma ve altta ortalanmış üç nokta ile seçim desteklenir. Elle seçim/kaydırma otomatik geçişi durdurur; odakta, fare üzerindeyken ve azaltılmış hareket tercihinde otomatik geçiş yapılmaz.
 - Hakkımızda metni `src/data/about.ts` içindedir; ana sayfadaki marka hikâyesi aynı kaynağı kullanır.
-- Kadın, Erkek ve Unisex ana kategorileri; Eau de Parfum, Eau de Toilette ve Parfum & Extrait alt kategorileri vardır. Marka filtresi bunlardan bağımsızdır. Eski ürünlerin kategori ve markaları adlarından çıkarılır, mevcut Firebase kayıtlarına toplu yazılmaz. Panelden verilen açık seçimler otomatik eşleşmenin önüne geçer.
-- `/admin/kategoriler` ile ana/alt kategori eklenir, düzenlenir ve gizlenir. Ürün düzenleyicisinde kategori ve marka değiştirilebilir. Kategoriler `product_categories` koleksiyonunda saklanır; başlangıç yapısı kayıt olmadan da kullanılabilir.
+- Ürün kategorileri yalnızca Bay, Bayan ve Unisex’tir. Katalogda ve admin ürün düzenleyicisinde alt kategori veya parfüm markası alanı yoktur. Eski `erkek`, `kadin`, `unisex` kimlikleri ve URL’leri korunur; kategorisi olmayan eski ürünler adlarından eşleştirilir.
+- `/admin/kategoriler` üç sabit kategoriyi gösterir. Ürün düzenleyicisinden kategori seçilir; özel kategori koleksiyonuna istek atılmaz.
 - Admin ürün listesi, Firebase kimliğini ve Firestore yetkilerini koruyan sunucu üzerinden yüklenir. 15 saniyelik yükleme sınırı, yeniden deneme, arama, 24 kayıtlık sayfalama ve eski ürün verilerini normalleştirme eklendi.
 
-**Canlıya geçiş:** Yeni kategori yönetimi için bu sürümdeki `firestore.rules` dosyası ilgili Firebase projesinde yayınlanmalıdır: `firebase deploy --only firestore:rules --project <hedef-proje>`. Bu işlem yetkili Firebase hesabıyla yapılır. Bu çalışma sırasında canlı kurallar veya ürün kayıtları değiştirilmedi.
+Hikâye bölümünde kullanıcı tarafından sağlanan Xerjoff Naxos ve Erba Pura fotoğrafları kullanılır. “Parfümümü nasıl saklamalıyım?” sorusu kaldırılmıştır. Sabit kategori yapısı için yeni Firestore kuralı yayınlamak gerekmez; eski kategori belgeleri toplu olarak değiştirilmez.
 
 Doğrulama: `npm test`, `npm run test:rules`, `npm run lint`, `npm run build`, `npx tsc --noEmit`.
+
+## Firestore okuma tüketimi
+
+- Genel katalog, blog ve galeri sorguları Next.js’in istekler arasında paylaşılan Data Cache katmanında **1 saat** saklanır. Yalnızca başarılı ve yayındaki Parfum Bahari kayıtları önbelleğe girer. Yetkili admin listeleri bu paylaşımlı önbelleğe girmez.
+- Ürün/yazı detayları `slug + isActive + brand` eşitlik sorgusu ve `limit: 1` kullanır. İlgili içerik önerileri ayrı ve ortak bir `limit: 4` sorgusunu paylaşır; detay sayfası tüm kataloğu okumaz.
+- Değişmez UUID’li fotoğraflar doğrulandıktan sonra sunucuda 1 yıl önbelleğe alınır. Tarayıcı/CDN önbelleği de korunur.
+- Admin ürün listesinde 30 saniyelik otomatik yenileme yoktur. Liste açılışta, kayıttan sonra veya elle yenilenir.
+- Ürün/blog/galeri oluşturma, düzenleme, görünürlük değişimi, silme ve başlangıç içeriği aktarımı ilgili genel veri önbelleğini yeniler. `/api/admin/revalidate` imzalı oturumla eşleşen geçerli Firebase yönetici kimliği ister. Konsoldan veya harici betikten yapılan değişiklikler normal önbellek süresinde görülür.
+- Eşzamanlı aynı sorgular sunucu örneği içinde birleştirilir. Firestore 429 döndürürse bu örnekte yeni genel veri okumaları 60 saniye duraklatılır. Hata boş katalog veya olmayan ürün olarak önbelleğe yazılmaz; geçici yükleme hatası gösterilir.
+- Genel sayfalar derleme sırasında canlı veritabanı okumaz. Kota dolu olsa da derleme tamamlanabilir.
+
+`npm run test:cache`, üretim derlemesinin geçici ve ayrı bir kopyasında gerçek Next.js önbelleğini doğrular. Firebase istekleri yerel test sunucusuna yönlendirilir; canlı kota harcanmaz, çalışma klasörünün veri önbelleğine deneme kaydı yazılmaz. Önce `npm run build` çalıştırılmalıdır.
+
+## Gerçek katalog verilerinin uyarlanması
+
+`npm run migrate:catalogue -- --project <proje-id>` varsayılan olarak yalnızca değişiklik planı çıkarır. Yönetici kimliği yoksa sadece yayındaki Parfum Bahari ürünlerini okuyabilir. Mevcut Firebase CLI hesabını kullanmak için `--firebase-cli`, ADC için `--adc` kullanılabilir; hedef projeye zaten yetkili bir hesap gerekir. Araç hesap veya rol oluşturmaz.
+
+Planlar ve geri dönüş makbuzları Git dışında `artifacts/catalogue-migration/` altında, yalnızca kullanıcı tarafından okunabilir dosyalarda saklanır. İncelenen plan `--apply --plan <dosya>` ile tek atomik işlemde uygulanır; bu modda yetkili kimlik zorunludur. Ürün adları, mevcut URL’ler, görsel referansları ve yayın durumları korunur. Kategori adından kesin belirlenemeyen ürünler inceleme listesine bırakılır. Ayrıntılar `docs/catalogue-migration.md` içindedir.

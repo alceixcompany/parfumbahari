@@ -13,7 +13,5 @@ export function normalizeProduct(item: Record<string, unknown> & { id: string })
     isActive: item.isActive === true, featured: item.featured === true,
     order: Number.isFinite(Number(item.order)) ? Number(item.order) : 0,
     ...(typeof item.categoryId === 'string' ? { categoryId: item.categoryId } : {}),
-    ...(typeof item.subcategoryId === 'string' ? { subcategoryId: item.subcategoryId } : {}),
-    ...(typeof item.fragranceBrand === 'string' ? { fragranceBrand: item.fragranceBrand } : {}),
   };
 }

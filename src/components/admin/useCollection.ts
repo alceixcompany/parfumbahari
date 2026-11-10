@@ -44,8 +44,7 @@ export function useCollection(name: string) {
       } finally { clearTimeout(deadline); controller.signal.removeEventListener('abort', cancel); loading = false; }
     }
     void read();
-    const timer = window.setInterval(() => { if (!document.hidden) void read(); }, 30000);
-    return () => { controller.abort(); window.clearInterval(timer); };
+    return () => controller.abort();
   }, [name, revision]);
   return { ...state, reload: () => { setState(value => ({ ...value, loading: true, error: '' })); setRevision(value => value + 1); } };
 }

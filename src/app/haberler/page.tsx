@@ -2,6 +2,8 @@ import { pageMetadata, getBreadcrumbSchema } from '@/lib/seo';
 import { PageIntro, DiscoveryBanner } from '@/components/brand/Sections';
 import Journal from '@/components/brand/Journal';
 import { getPublishedPosts } from '@/lib/publicContent';
+// Render on requests; the shared data cache controls Firestore reads, including during outages.
+export const dynamic = 'force-dynamic';
 export const metadata = pageMetadata({ title: 'Blog — Parfüm Rehberi ve İlham', description: 'Parfüm seçimi, koku notaları, mevsimlere göre parfümler ve saklama önerileri. Parfum Bahari blogunda yeni hikâyeler keşfedin.', path: '/haberler' });
 export default async function JournalPage() {
   const posts = await getPublishedPosts();

@@ -70,3 +70,7 @@ Tam istem:
 Üretim istemi:
 
 > Use case: logo-brand. Asset type: finished horizontal transparent PNG logo for the header of a Turkish perfume boutique named Parfum Bahari. Primary request: create a refined, airy, beautiful horizontal identity with a delicate perfume bottle and a very subtle spring petal motif integrated with a graceful, highly legible wordmark. Text verbatim, only inside the logo composition: "Parfum Bahari". Wide horizontal layout around 4:1 with carefully balanced open spacing, compact height so it remains readable at 220px wide. Understated luxury, fresh and elegant rather than ornate, clean vector-like flat artwork, burgundy #632b3c with a restrained warm rose accent, no tiny details. Scene/backdrop: actual transparent alpha background, no solid background, no backdrop rectangle, no checkerboard painted into artwork. No tagline, no slogans, no subtitle, no extra text, no mockup, no shadow, no gradients, no gold metallic treatment. This is the logo image itself; do not show a website or surrounding UI.
+
+## Kullanıcının sağladığı hikâye fotoğrafları — 10 Kasım 2026
+
+`public/parfum-bahari/story-naxos.png` ve `public/parfum-bahari/story-erba-pura.png`, kullanıcının verdiği iki fotoğrafın değiştirilmeden kopyalanmış hâlidir. Ana sayfa ve Hakkımızda sayfasındaki ortak hikâye bölümünde eski Rose de Soie / Santal Noir görsellerinin yerini alır.

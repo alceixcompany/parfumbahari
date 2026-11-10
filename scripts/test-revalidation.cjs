@@ -1,0 +1,45 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const ts = require('typescript');
+const root = path.resolve(__dirname, '..');
+let session; let tags = []; let responses = []; let fetchCalls = 0;
+require.extensions['.ts'] = (module, filename) => {
+  const original = module.require;
+  module.require = function (id) {
+    if (id === 'next/headers') return { cookies: async () => ({ get: () => session ? { value: session } : undefined }) };
+    if (id === 'next/cache') return { revalidateTag: (tag, profile) => tags.push({ tag, profile }), unstable_cache: callback => callback };
+    return original.call(this, id.startsWith('@/') ? path.join(root, 'src', id.slice(2) + '.ts') : id);
+  };
+  module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true } }).outputText, filename);
+};
+if (!global.crypto) global.crypto = require('node:crypto').webcrypto;
+Object.assign(process.env, { NEXT_PUBLIC_CONTENT_SOURCE: 'firebase', NEXT_PUBLIC_FIREBASE_PROJECT_ID: 'demo-parfum-bahari', NEXT_PUBLIC_FIREBASE_API_KEY: 'test-only', ADMIN_SESSION_SECRET: 'test-revalidate-secret-012345678901234567890123456789', FIREBASE_PRIMARY_ADMIN_UID: 'primary-test' });
+const { POST } = require('../src/app/api/admin/revalidate/route.ts');
+const { createAdminSessionToken } = require('../src/lib/adminSession.ts');
+const request = (body = { collections: ['products'] }, token = true) => new Request('http://localhost/api/admin/revalidate', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer firebase-test-token' } : {}) }, body: JSON.stringify(body) });
+global.fetch = async (_url, options) => { fetchCalls++; assert.equal(options.cache, 'no-store'); assert(responses.length); const response = responses.shift(); return Response.json(response.body, { status: response.status || 200 }); };
+const identity = uid => ({ body: { users: [{ localId: uid }] } });
+(async () => {
+  assert.equal((await POST(request())).status, 401);
+  session = 'tampered'; assert.equal((await POST(request())).status, 401);
+  session = await createAdminSessionToken('primary-test', process.env.ADMIN_SESSION_SECRET);
+  assert.equal((await POST(request({}, false))).status, 401);
+  assert.equal((await POST(request({ collections: ['admins'] }))).status, 400);
+  assert.equal((await POST(request({ collections: [] }))).status, 400);
+  assert.equal(fetchCalls, 0); assert.equal(tags.length, 0);
+  responses = [identity('ordinary-user')];
+  assert.equal((await POST(request())).status, 403); assert.equal(tags.length, 0);
+  responses = [{ body: { users: [{ localId: 'primary-test', disabled: true }] } }];
+  assert.equal((await POST(request())).status, 401);
+  responses = [identity('primary-test')];
+  assert.equal((await POST(request({ collections: ['products', 'products', 'haberler'] }))).status, 200);
+  assert.deepEqual(tags.map(item => item.tag), ['parfum-bahari-public:demo-parfum-bahari:products', 'parfum-bahari-public:demo-parfum-bahari:haberler']);
+  assert(tags.every(item => item.profile.expire === 0));
+  session = await createAdminSessionToken('delegated-test', process.env.ADMIN_SESSION_SECRET);
+  responses = [identity('delegated-test'), { body: { fields: { isAdmin: { booleanValue: false } } } }];
+  assert.equal((await POST(request())).status, 403); assert.equal(tags.length, 2);
+  responses = [identity('delegated-test'), { body: { fields: { isAdmin: { booleanValue: true } } } }];
+  assert.equal((await POST(request({ collections: ['gallery_items'] }))).status, 200); assert.equal(tags.length, 3);
+  console.log('PASS: revalidation requires a valid signed session and matching Firebase admin, rejects invalid/revoked roles and expires only selected public tags.');
+})().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,0 +1,35 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+require.extensions['.ts'] = (module, filename) => { const ts = require('typescript'); module._compile(ts.transpileModule(fs.readFileSync(filename, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText, filename); };
+const { planCatalogueMigration } = require('../src/lib/catalogueMigration.ts');
+const base = { brand: 'parfum-bahari', name: 'Örnek Erkek Parfüm', slug: 'ornek-parfum', story: 'Gerçek açıklama', image: '/parfum-bahari/rose.webp', images: ['/parfum-bahari/rose.webp'], categoryId: 'erkek', isActive: false };
+assert.deepEqual(planCatalogueMigration('ornek-parfum', base), { set: {}, remove: [], review: [] });
+const legacy = { ...base, categoryId: 'bay', subcategoryId: 'erkek-edp', fragranceBrand: 'Marka', description: 'Eski açıklama' };
+const before = JSON.stringify(legacy);
+assert.deepEqual(planCatalogueMigration('ornek-parfum', legacy), { set: { categoryId: 'erkek' }, remove: ['subcategoryId', 'fragranceBrand'], review: [] });
+assert.equal(JSON.stringify(legacy), before, 'Planner never mutates the source snapshot.');
+const female = planCatalogueMigration('ornek-parfum', { ...base, name: 'Kadın Parfüm', categoryId: undefined });
+assert.equal(female.set.categoryId, 'kadin');
+const unisex = planCatalogueMigration('ornek-parfum', { ...base, name: 'UNİSEX Parfüm', categoryId: undefined });
+assert.equal(unisex.set.categoryId, 'unisex');
+const ambiguous = planCatalogueMigration('ornek-parfum', { ...base, name: 'Bay ve Bayan Parfüm', categoryId: undefined });
+assert.equal(ambiguous.set.categoryId, undefined); assert.equal(ambiguous.review.length, 1);
+const conflict = planCatalogueMigration('ornek-parfum', { ...base, name: 'Kadın Parfüm' });
+assert.equal(conflict.set.categoryId, undefined); assert(conflict.review.length);
+assert.deepEqual(planCatalogueMigration('other', { ...legacy, brand: 'other-brand' }), { set: {}, remove: [], review: [] });
+const text = planCatalogueMigration('ornek-parfum', { ...base, story: '   ', description: 'Orijinal uzun açıklama' });
+assert.equal(text.set.story, 'Orijinal uzun açıklama'); assert(!text.remove.includes('description'));
+const photo = planCatalogueMigration('ornek-parfum', { ...base, images: undefined });
+assert.deepEqual(photo.set.images, [base.image]);
+const invalidPhoto = planCatalogueMigration('ornek-parfum', { ...base, images: { url: 'legacy-format' } });
+assert.equal(invalidPhoto.set.images, undefined); assert(invalidPhoto.review.length);
+const tooMany = planCatalogueMigration('ornek-parfum', { ...base, images: Array.from({ length: 9 }, (_, index) => `https://example.com/${index}.jpg`) });
+assert.equal(tooMany.set.images, undefined); assert(tooMany.review.length);
+const invalidSlug = planCatalogueMigration('existing-id', { ...base, slug: 'Ürün Linki' });
+assert.equal(invalidSlug.set.slug, undefined); assert(invalidSlug.review.length);
+const missingSlug = planCatalogueMigration('existing-id', { ...base, slug: undefined });
+assert.equal(missingSlug.set.slug, 'existing-id');
+for (const patch of [female, unisex, ambiguous, conflict, photo, invalidPhoto, tooMany, invalidSlug, missingSlug]) {
+  assert(!Object.hasOwn(patch.set, 'isActive')); assert(!Object.hasOwn(patch.set, 'name'));
+}
+console.log('PASS: conservative migration preserves visibility, names, URLs, photo references, foreign brands and source snapshots; handles legacy categories and flags uncertain records.');

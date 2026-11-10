@@ -1,3 +1,4 @@
+import { invalidatePublicContent, PUBLIC_COLLECTIONS } from '@/lib/contentCache';
 import { ensureInitialContent } from '@/lib/initialContent';
 import { isPrimaryAdmin } from '@/lib/adminIdentity';
 import { CONTENT_SOURCE } from '@/lib/contentSource';
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
     let setupMessage = '';
     let setupError = false;
     if (isPrimaryAdmin(user.localId)) {
-      try { const imported = await ensureInitialContent(idToken); if (imported.initialized) setupMessage = `${imported.added} başlangıç içeriği Firebase’e aktarıldı; ${imported.skipped} mevcut kayıt korundu.`; }
+      try { const imported = await ensureInitialContent(idToken); if (imported.initialized && imported.added) invalidatePublicContent(PUBLIC_COLLECTIONS); if (imported.initialized) setupMessage = `${imported.added} başlangıç içeriği Firebase’e aktarıldı; ${imported.skipped} mevcut kayıt korundu.`; }
       catch (error) { setupMessage = error instanceof Error ? error.message : 'İçerik kurulumu tamamlanamadı.'; setupError = true; }
     }
     const response = NextResponse.json({ user: { uid: user.localId, email: user.email, displayName, setupMessage, setupError, isStaticAdmin: false, isDatabaseAdmin: true } });

@@ -10,11 +10,10 @@ export const navigation = [
   { label: 'Ana Sayfa', href: '/' },
   { label: 'Hakkımızda', href: '/hakkimizda' },
   { label: 'Ürün Kataloğu', href: '/urun-katalogu' },
-  { label: 'Blog', href: '/haberler' },
 ];
 
 export const catalogueNavigation = [
-  { label: 'Kadın Parfüm', href: '/urun-katalogu?kategori=kadin' },
-  { label: 'Erkek Parfüm', href: '/urun-katalogu?kategori=erkek' },
-  { label: 'Unisex Parfüm', href: '/urun-katalogu?kategori=unisex' },
+  { label: 'Bayan', href: '/urun-katalogu?kategori=kadin' },
+  { label: 'Bay', href: '/urun-katalogu?kategori=erkek' },
+  { label: 'Unisex', href: '/urun-katalogu?kategori=unisex' },
 ];

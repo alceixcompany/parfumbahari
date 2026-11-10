@@ -30,12 +30,22 @@ Firebase modunda genel sayfalar yalnızca yayındaki Parfum Bahari kayıtların�
 
 Statik önizleme için `NEXT_PUBLIC_CONTENT_SOURCE=static` ayarlanıp uygulama yeniden başlatılabilir. Üretimden önce `NEXT_PUBLIC_SITE_URL` gerçek HTTPS alan adıyla doldurulmalıdır.
 
-## Kategori yönetimi
+## Kategori yönetimi — 10 Kasım 2026
 
-`product_categories` iki seviyeli bir ağaçtır: `parentId` boşsa ana kategori, aksi hâlde bir ana kategoriye bağlı alt kategoridir. Belgelerde yalnızca herkese açık ad, bağlı kategori, sıralama ve görünürlük ayarları tutulur. Gizli kategori tanımları da okunabilir; bunlar kategori ağacında gösterilmez. Gizli ana kategorinin alt kategorileri de gizlenir. Ürünlerin taslak/yayın erişim kuralları değişmez.
+Ürün kategorileri kodda sabittir: Bay (`erkek`), Bayan (`kadin`), Unisex (`unisex`). `/admin/kategoriler` bu üç seçeneği listeler. Ürün düzenleyicisinde tek bir kategori seçilir; alt kategori ve parfüm markası alanları kaldırılmıştır. Katalog aynı üç kategoriyle filtrelenir.
 
-Varsayılan kategori ağacı kodda tanımlıdır. `product_categories` içindeki aynı kimlikli belgeler bu tanımları geçersiz kılar; böylece varsayılan bir kategori de gizlenebilir. Kategori silmek yerine gizlemek ürün bağlantılarını korur. Yeni alt kategori varsayılan bir ana kategoriye bağlanırken eksik ana kategori belgesi aynı transaction içinde oluşturulur. Üçüncü seviyeye ve kendisine bağlamaya kurallar izin vermez.
+Eski ürün kimlikleri ve URL parametreleri korunur. `bay` ve `bayan` kimlikleri de eski `erkek` ve `kadin` kimliklerine eşlenir. Kategorisiz eski ürünlerde adından güvenli biçimde kategori çıkarılır; `categoryId` alanında geçerli bir açık seçim varsa bu önceliklidir. Eski özel bir kategori artık desteklenmediğinde ürün adındaki kategori kullanılır.
 
-Ürünlerde isteğe bağlı `categoryId`, `subcategoryId` ve `fragranceBrand` alanları kullanılır. Eski ürünlerin adlarından çıkarılan eşleşmeler kayda yazılmadan arayüzde çalışır; yönetici kaydettiğinde açık alanlar saklanır. `brand: parfum-bahari` içerik aidiyetini korur ve parfüm markasıyla karıştırılmaz.
+Genel sayfalar ve ürün düzenleyicisi `product_categories` koleksiyonunu okumaz; bu nedenle yalnızca bu değişiklik için yeni Firestore kuralları yayınlamak gerekmez. Önceki kategori belgeleri canlı veritabanından toplu olarak silinmez. Ürün yeniden kaydedildiğinde kullanılmayan `subcategoryId` ve `fragranceBrand` alanları kayıt yardımcı fonksiyonunca temizlenir; kategori kimliği korunur.
 
-Yönetici listeleme uç noktası `/api/admin/collections/[name]` yalnızca ürünler ve ürün kategorileri için açıktır. İmzalı yönetici çerezi yanında Firebase ID token ister ve tokenı Firestore'a iletir; belge erişimleri Firebase kurallarıyla doğrulanır. Yanıtlar önbelleğe alınmaz. Çerez veya token olmadan ürün listesi okunamaz.
+Yönetici ürün listesi `/api/admin/collections/products` üzerinden imzalı yönetici çerezi ve Firebase ID token ile okunur. Firestore yetki kuralları ve önbelleksiz yanıtlar korunur.
+
+## Genel içerik önbelleği ve güncellemeler
+
+Genel veri sorguları `src/lib/contentCache.ts` üzerinden 3600 saniyelik paylaşımlı önbelleğe alınır. Anahtarlar proje, koleksiyon ve sorgu kapsamını içerir. Aynı ürünün metadata ve sayfa istekleri tek ürün sonucunu paylaşır. Ürün/yazı detayları en fazla bir belge, öneriler en fazla dört belge ister; eşitlik indeksleri kullanıldığından bu değişiklik için yeni bir birleşik indeks veya kural yayını gerekmez.
+
+İstemcideki yazma işlemi tamamlandıktan sonra `refreshPublicContent` ilgili koleksiyonları `/api/admin/revalidate` uç noktasına iletir. Sunucu imzalı oturumu, Firebase kimliğini, kimliklerin eşleşmesini ve yönetici rolünü doğrular; sadece izin verilen genel içerik etiketlerini `{ expire: 0 }` ile geçersiz kılar. Bir sonraki istek güncel veriyi okur. Önceden açılmış ziyaretçi sayfaları kendiliğinden yeniden yüklenmez.
+
+Önbellek yenilemesi başarısız olursa tamamlanmış veritabanı kaydı başarısız sayılmaz; panelde kayıt tamamlandı bilgisiyle birlikte yenileme uyarısı gösterilir. Başarılı güncelleme beklenirken aynı ürünün tekrar oluşturulmasına gerek yoktur. Firebase konsolu/harici betikler bu uç noktayı çağırmadığından onların değişiklikleri zaman tabanlı yenilemede görünür.
+
+Medya baytları değiştirilmez UUID altında doğrulanarak 1 yıl önbelleğe alınır. Fotoğraf değiştirme zaten yeni UUID üretir. Taslak admin verisi veya Firebase tokenları genel veri önbelleğine alınmaz.

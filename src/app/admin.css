@@ -67,17 +67,12 @@
 .admin-login-visual .brand-mark .brand-wordmark small { color: #dbc7b5; }
 .admin-login-form .admin-eyebrow, .admin-eyebrow { font-size: 11px !important; letter-spacing: .7px; }
 
-.admin-category-group + .admin-category-group { border-top: 1px solid var(--admin-border); }
 .admin-category-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px 24px; }
-.admin-category-row.is-child { padding-left: 48px; background: #f5f2e9; }
 .admin-category-row strong { font-size: 15px; }
 .admin-category-row small { display: block; margin-top: 6px; font-size: 12px; color: var(--admin-muted); }
-.admin-category-active { display: flex !important; align-items: center; gap: 10px; }
-.admin-category-active input { width: 18px !important; height: 18px; }
 .admin-tabs > a { display: inline-flex; gap: 8px; align-items: center; }
 @media (max-width: 760px) {
   .admin-category-row { padding: 16px; gap: 12px; flex-wrap: wrap; }
-  .admin-category-row.is-child { padding-left: 28px; }
   .admin-category-row .admin-row-actions { margin-left: auto; }
   .admin-tabs { flex-wrap: wrap; gap: 15px; }
 }

@@ -11,7 +11,6 @@ export async function saveProduct(database: Firestore, product: ProductRecord, e
   const slug = product.slug;
   if (!product.name.trim() || product.name.trim().length > 100) throw new Error('1–100 karakter arasında bir ürün adı girin.');
   if (!Number.isInteger(product.order) || product.order < 0 || product.order > 9999) throw new Error('Sıra numarası 0–9999 arasında bir tam sayı olmalı.');
-  if (product.subcategoryId && !product.categoryId) throw new Error('Alt kategori için önce bir ana kategori seçin.');
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || slug.length > 100) throw new Error('Geçerli bir bağlantı adı girin.');
   if (!isProductImage(product.image)) throw new Error('Lütfen bir ürün fotoğrafı seçin.');
   const photos = product.images ?? [product.image];
@@ -19,7 +18,7 @@ export async function saveProduct(database: Firestore, product: ProductRecord, e
   const images = selected ? Array.isArray(selected) ? selected : [selected] : [];
   if (new Set(images.map(image => image.id)).size !== images.length || images.some(image => !photos.includes(`/api/media/${image.id}`) || !/^[a-f0-9-]{36}$/.test(image.id) || !['image/webp', 'image/jpeg'].includes(image.blob.type) || image.blob.size === 0 || image.blob.size > MAX_IMAGE_BYTES || !Number.isInteger(image.width) || !Number.isInteger(image.height) || image.width < 1 || image.height < 1 || image.width > 2400 || image.height > 2400)) throw new Error('Fotoğraf geçerli değil. Yeniden seçin.');
   const now = new Date().toISOString();
-  const removedFields = new Set(['id', 'category', 'family', 'sizes', 'topNotes', 'heartNotes', 'baseNotes', 'subtitle', 'description']);
+  const removedFields = new Set(['id', 'category', 'family', 'sizes', 'topNotes', 'heartNotes', 'baseNotes', 'subtitle', 'description', 'subcategoryId', 'fragranceBrand']);
   const content = Object.fromEntries(Object.entries(product).filter(([key]) => !removedFields.has(key)));
   const media = await Promise.all(images.map(async image => ({
     id: image.id, data: Bytes.fromUint8Array(new Uint8Array(await image.blob.arrayBuffer())),

@@ -3,7 +3,7 @@ const fs=require('fs');const path=require('node:path');const root=path.resolve(_
 require.extensions['.ts'] = (module, filename) => { const ts = require('typescript'); module._compile(ts.transpileModule(fs.readFileSync(filename,'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText,filename); };
 const { saveProduct } = require('../src/lib/productPersistence.ts');
 const { initializeTestEnvironment, assertSucceeds, assertFails }=require('@firebase/rules-unit-testing');
-const {Bytes,doc,getDoc,setDoc,updateDoc,deleteDoc,getDocs,collection,query,where,writeBatch,setLogLevel}=require('firebase/firestore');
+const {Bytes,doc,getDoc,setDoc,updateDoc,deleteDoc,getDocs,collection,query,where,limit,writeBatch,setLogLevel}=require('firebase/firestore');
 setLogLevel('silent');
 (async()=>{
 const env=await initializeTestEnvironment({projectId:'demo-parfum-bahari',firestore:{host:'127.0.0.1',port:8085,rules:fs.readFileSync(path.join(root,'firestore.rules'),'utf8')}});
@@ -145,8 +145,15 @@ categoryBatch.set(doc(trusted,'product_categories','erkek-nis'),{...category,nam
 await assertSucceeds(categoryBatch.commit());
 await assertSucceeds(saveProduct(trusted,{...uploadedProduct,categoryId:'erkek',subcategoryId:'erkek-nis',fragranceBrand:'Tom Ford'},'uploaded-product',[]));
 const classifiedProduct=(await getDoc(doc(trusted,'products','uploaded-product'))).data();
-assert.equal(classifiedProduct.categoryId,'erkek');assert.equal(classifiedProduct.subcategoryId,'erkek-nis');assert.equal(classifiedProduct.fragranceBrand,'Tom Ford');
+assert.equal(classifiedProduct.categoryId,'erkek');assert.equal('subcategoryId' in classifiedProduct,false);assert.equal('fragranceBrand' in classifiedProduct,false);
 checks+=16;
+// Public detail and related queries use equality indexes and explicit document limits.
+const singleProduct=await assertSucceeds(getDocs(query(collection(guest,'products'),where('isActive','==',true),where('brand','==','parfum-bahari'),where('slug','==','multiple-photos'),limit(1))));
+assert.equal(singleProduct.size,1);
+const suggestions=await assertSucceeds(getDocs(query(collection(guest,'products'),where('isActive','==',true),where('brand','==','parfum-bahari'),limit(4))));
+assert(suggestions.size<=4);
+await assertFails(getDocs(query(collection(guest,'products'),where('brand','==','parfum-bahari'),where('isActive','==',false),limit(1))));
+checks+=3;
 console.log('PASS:',checks,'Firestore rule and content lifecycle checks. Server-only admin provisioning, public filters, draft privacy, admin CRUD, disabled contact forms, primary admin UID, computer image uploads, image limits, immutable media, cover selection, legacy single-photo compatibility, removed product fields, and atomic multi-photo saves verified.');
 }finally{await env.cleanup();}
 })().catch(e=>{console.error(e);process.exit(1)});

@@ -11,7 +11,9 @@
     "provision:firebase": "node scripts/provision-firebase.mjs",
     "test:rules": "firebase emulators:exec --only firestore --project demo-parfum-bahari --config firebase.test.json \"node scripts/test-firestore-rules.cjs\"",
     "check:site": "node scripts/check-site.mjs",
-    "test": "node scripts/test-admin-session.cjs && node scripts/test-admin-collections.cjs && node scripts/test-initial-content.cjs && node scripts/test-photo-swipe.cjs && node scripts/test-product-categories.cjs"
+    "test": "node scripts/test-admin-session.cjs && node scripts/test-admin-collections.cjs && node scripts/test-initial-content.cjs && node scripts/test-photo-swipe.cjs && node scripts/test-product-categories.cjs && node scripts/test-public-read-guard.cjs && node scripts/test-revalidation.cjs && node scripts/test-catalogue-migration.cjs && node scripts/test-catalogue-migration-cli.cjs",
+    "test:cache": "node scripts/test-cache-integration.cjs",
+    "migrate:catalogue": "node scripts/migrate-catalogue.cjs"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
