@@ -85,19 +85,70 @@ main .discovery-banner .banner-flower { color: rgb(255 248 238 / 5%); }
 .hero-slider-viewport { position: relative; width: 100%; height: 100%; overflow: hidden; }
 .home-hero > .hero-slider-viewport { position: absolute; inset: 0; }
 .hero-slider-viewport > .hero-slider-track { position: absolute; inset: 0; }
-.collection-showcase { padding-block: 64px; background: #eee6da; border-block: 1px solid #e0d7c9; }
-.collection-carousel { position: relative; background: var(--paper); }
+/* A quiet editorial frame for the independent fragrance showcase. */
+.collection-showcase { padding-block: 82px; background: #f0e9df; border-block: 1px solid #e1d7c9; }
+.collection-showcase-layout { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(0, 2fr); gap: 56px; align-items: stretch; }
+.collection-showcase-intro { display: flex; flex-direction: column; align-items: flex-start; padding-block: 28px 16px; }
+.collection-kicker { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; line-height: 1.7; color: #766352; }
+.collection-kicker::before { content: ''; width: 28px; height: 1px; background: #9c7c65; }
+.collection-showcase-intro h2 { margin: 32px 0 28px; font-size: clamp(36px, 3.2vw, 48px); line-height: 1.15; font-weight: 600; letter-spacing: -1px; }
+.collection-showcase-intro h2 span { color: #632b3c; }
+.collection-designer { font-size: 17px; line-height: 1.6; color: #40362e; }
+.collection-series { margin-top: 5px; font-size: 13px; line-height: 1.7; color: #786c60; }
+.collection-main-link { display: inline-flex; align-items: center; gap: 16px; margin-top: 32px; font-size: 14px; line-height: 1.5; font-weight: 600; color: #632b3c; }
+.collection-main-link > span { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid #c9b4a7; border-radius: 50%; transition: background .2s, color .2s; }
+.collection-main-link:hover > span { background: #632b3c; border-color: #632b3c; color: #fff8ee; }
+.collection-brand-line { max-width: 250px; margin-top: auto; padding-top: 48px; font-size: 11px; line-height: 1.9; letter-spacing: .7px; font-weight: 600; color: #8b7563; }
+.collection-carousel { position: relative; min-width: 0; overflow: hidden; border-radius: 6px; background: #43232d; box-shadow: 0 20px 50px #35201914; }
 .collection-carousel .hero-slider-viewport { height: auto; aspect-ratio: 16 / 9; }
-.collection-carousel .hero-slider-controls { position: static; transform: none; justify-content: space-between; padding: 12px 18px; border: 1px solid #ddd0c0; border-top: 0; }
-.collection-carousel .hero-slider-dots button::after { background: #632b3c40; border-color: #632b3c55; box-shadow: none; }
-.collection-carousel .hero-slider-dots button[aria-pressed=true]::after { background: #632b3c; }
-.collection-slider-arrow { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid #d4c4b4; background: transparent; color: #632b3c; font-size: 24px; }
-.collection-slider-arrow:hover { background: #eee6da; }
-.collection-carousel .hero-slider-controls button:focus-visible { outline: 2px solid #632b3c; border-radius: 0; }
+.collection-carousel .hero-slider-controls { position: static; transform: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 28px; padding: 20px 26px; color: #fff8ee; }
+.collection-slide-meta > span { display: block; font-size: 10px; line-height: 1.5; letter-spacing: 1.5px; color: #c6ab9f; font-variant-numeric: tabular-nums; }
+.collection-slide-meta > p { margin-top: 5px; font-size: 14px; font-weight: 500; line-height: 1.5; }
+.collection-carousel .hero-slider-dots { gap: 7px; }
+.collection-carousel .hero-slider-dots button { position: relative; width: 32px; height: 40px; color: #c6ab9f; font: 400 12px/1.5 Arial, sans-serif; font-variant-numeric: tabular-nums; }
+.collection-carousel .hero-slider-dots button::after { display: none; }
+.collection-carousel .hero-slider-dots button[aria-pressed=true] { color: #fff8ee; }
+.collection-carousel .hero-slider-dots button[aria-pressed=true]::before { content: ''; position: absolute; height: 1px; left: 8px; right: 8px; bottom: 3px; background: #fff8ee; }
+.collection-slider-arrows { display: flex; align-items: center; gap: 10px; }
+.collection-slider-arrow { width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 1px solid #bca19370; border-radius: 50%; background: transparent; color: #fff8ee; font-size: 21px; transition: background .2s, color .2s; }
+.collection-slider-arrow:hover { background: #fff8ee; border-color: #fff8ee; color: #43232d; }
+.collection-carousel .hero-slider-controls button:focus-visible { outline: 2px solid #fff8ee; outline-offset: 3px; }
+@media (max-width: 1100px) {
+  .collection-showcase-layout { grid-template-columns: minmax(210px, .8fr) minmax(0, 2fr); gap: 30px; }
+  .collection-showcase-intro { padding-top: 14px; }
+  .collection-showcase-intro h2 { margin-block: 24px; font-size: 38px; }
+  .collection-carousel .hero-slider-controls { gap: 16px; padding: 17px 20px; }
+  .collection-carousel .hero-slider-dots { gap: 2px; }
+}
+@media (max-width: 900px) {
+  .collection-showcase-layout { grid-template-columns: 1fr; gap: 28px; }
+  .collection-showcase-intro { padding: 0; }
+  .collection-showcase-intro h2 { font-size: 34px; margin: 16px 0 22px; }
+  .collection-showcase-intro h2 br { display: none; }
+  .collection-intro-detail { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; }
+  .collection-main-link { margin-top: 0; }
+  .collection-brand-line { display: none; }
+}
 @media (max-width: 760px) {
-  .collection-showcase { padding-block: 48px; }
-  .collection-showcase .section-heading { display: block; }
-  .collection-showcase .section-heading > .text-link { display: inline-flex; margin-top: 18px; }
+  .collection-showcase { padding-block: 44px; }
+  .collection-showcase-layout { gap: 24px; }
+  .collection-kicker { font-size: 10px; letter-spacing: 1px; gap: 9px; }
+  .collection-kicker::before { width: 20px; }
+  .collection-showcase-intro h2 { font-size: 32px; letter-spacing: -.7px; }
+  .collection-designer { font-size: 15px; }
+  .collection-series { font-size: 12px; margin-top: 3px; }
+  .collection-main-link { font-size: 12px; gap: 10px; }
+  .collection-main-link > span { width: 30px; height: 30px; }
   .collection-carousel .hero-slider-viewport { aspect-ratio: 4 / 3; }
-  .collection-carousel .hero-slider-controls { padding: 8px 10px; }
+  .collection-carousel .hero-slider-controls { grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; padding: 16px 18px 12px; }
+  .collection-slide-meta > p { font-size: 13px; }
+  .collection-carousel .hero-slider-dots { grid-row: 2; grid-column: 1 / -1; justify-content: flex-start; }
+  .collection-carousel .hero-slider-dots button { height: 30px; }
+  .collection-slider-arrows { grid-row: 1; grid-column: 2; gap: 8px; }
+  .collection-slider-arrow { width: 36px; height: 36px; font-size: 19px; }
+}
+@media (max-width: 350px) {
+  .collection-intro-detail { gap: 10px; }
+  .collection-main-link { gap: 6px; font-size: 11px; }
+  .collection-designer { font-size: 14px; }
 }
