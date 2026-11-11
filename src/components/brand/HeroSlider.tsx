@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { usePhotoSwipe } from '@/lib/photoSwipe';
-import { business } from '@/data/brand';
 
 type Slide = { image: string; alt: string; title: string; label: string; href: string; imageOnly?: boolean };
 const heroSlides: Slide[] = [
@@ -26,10 +25,8 @@ export default function HeroSlider() {
 export function CollectionSlider() {
   return <section className="section collection-showcase" aria-labelledby="collection-showcase-title"><div className="container collection-showcase-layout">
     <header className="collection-showcase-intro">
-      <p className="collection-kicker">PARFUM BAHARI SEÇKİSİ</p>
-      <h2 id="collection-showcase-title">İkonik bir<br /> <span>seçki.</span></h2>
-      <div className="collection-intro-detail"><div><p className="collection-designer">Carolina Herrera</p><p className="collection-series">Good Girl &amp; Bad Boy</p></div><Link href="/urun-katalogu?q=carolina+herrera" className="collection-main-link">Seçkiyi keşfedin <span><FiArrowRight /></span></Link></div>
-      <p className="collection-brand-line">{business.tagline}</p>
+      <div><h2 id="collection-showcase-title">Carolina Herrera</h2><p className="collection-series">Good Girl &amp; Bad Boy</p></div>
+      <Link href="/urun-katalogu?q=carolina+herrera" className="collection-main-link">Keşfet <FiArrowRight /></Link>
     </header>
     <FragranceCarousel slides={collectionSlides} label="Carolina Herrera parfüm seçkisi" />
   </div></section>;
@@ -69,8 +66,8 @@ function FragranceCarousel({ slides, label, hero = false }: { slides: Slide[]; l
       </div>)}
     </div></div>
     <div className="hero-slider-controls" role="group" aria-label="Slayt seçimi">
-      {!hero && <div className="collection-slide-meta" aria-hidden="true"><span>{String(selected + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span><p>{slides[selected].title}</p></div>}
-      <div className="hero-slider-dots">{slides.map((slide, index) => <button key={slide.image} type="button" onClick={() => { setSelected(index); setPaused(true); }} aria-label={`${index + 1}. slaytı göster`} aria-pressed={selected === index}>{!hero && <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>}</button>)}</div>
+      {!hero && <span className="collection-slide-count" aria-hidden="true">{String(selected + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}</span>}
+      <div className="hero-slider-dots">{slides.map((slide, index) => <button key={slide.image} type="button" onClick={() => { setSelected(index); setPaused(true); }} aria-label={`${index + 1}. slaytı göster`} aria-pressed={selected === index} />)}</div>
       {!hero && <div className="collection-slider-arrows"><button type="button" className="collection-slider-arrow" aria-label="Önceki seçki" onClick={() => move(-1)}><FiChevronLeft /></button><button type="button" className="collection-slider-arrow" aria-label="Sonraki seçki" onClick={() => move(1)}><FiChevronRight /></button></div>}
     </div>
     <p className="sr-only" aria-live={paused || focused ? 'polite' : 'off'}>{selected + 1} / {slides.length}: {slides[selected].title}</p>
