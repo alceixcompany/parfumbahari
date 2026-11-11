@@ -6,7 +6,7 @@ export const IS_INDEXABLE = process.env.NODE_ENV === 'production' && Boolean(con
 export const SEO_CONFIG = {
   name: business.name,
   tagline: business.tagline,
-  shortDescription: 'Parfum Bahari ile kendi koku hikâyenizi keşfedin. Parfüm koleksiyonumuzu keşfedin, ürün fotoğraflarını inceleyin ve favori kokularınızı bulun.',
+  shortDescription: `Parfum Bahari — ${business.tagline}. Parfüm koleksiyonumuzu keşfedin, ürün fotoğraflarını inceleyin ve favori kokularınızı bulun.`,
   fullDescription: 'Parfum Bahari, kokuların uyandırdığı hislerden ilham alır. Ürün kataloğumuzda parfüm koleksiyonumuzu keşfedin; ürün fotoğraflarını, açıklamalarını ve marka hikâyemizi inceleyin.',
   images: { hero: '/parfum-bahari/hero-branded.webp', icon: '/parfum-bahari/icon-pb.png' },
   keywords: ['Parfum Bahari', 'parfüm kataloğu', 'parfüm koleksiyonu', 'parfüm çeşitleri', 'eau de parfum'],

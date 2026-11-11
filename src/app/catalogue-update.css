@@ -22,6 +22,7 @@ main .discovery-banner .banner-flower { color: rgb(255 248 238 / 5%); }
 .hero-slide-link { display: block; position: relative; height: 100%; width: 100%; touch-action: pan-y pinch-zoom; user-select: none; }
 .hero-slide-link > img { object-fit: cover; object-position: center; }
 .hero-slide-link::after { content: ''; position: absolute; inset: 40% 0 0; background: linear-gradient(transparent, rgb(31 18 14 / 78%)); pointer-events: none; }
+.hero-slide-image-only::after { display: none; }
 .hero-slide-caption { position: absolute; z-index: 1; bottom: 72px; left: max(56px, calc((100vw - 1360px) / 2)); right: 56px; color: #fff8ee; }
 .hero-slide-caption p { font: 600 clamp(28px, 4vw, 54px)/1.2 Arial, sans-serif; max-width: 800px; text-shadow: 0 2px 12px #28171460; }
 .hero-slide-caption span { display: inline-flex; gap: 20px; align-items: center; margin-top: 18px; font-size: 15px; border-bottom: 1px solid #fff8ee90; padding-bottom: 9px; }
@@ -73,3 +74,30 @@ main .discovery-banner .banner-flower { color: rgb(255 248 238 / 5%); }
 .mobile-catalogue-links { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 24px; }
 .mobile-catalogue-links a { display: block; padding: 12px; border: 1px solid #e1dace; font-size: 14px; }
 @media (max-width: 1000px) { .desktop-nav-item > a { font-size: 13px; } }
+
+/* The current brand slogan is text, so it stays crisp at every screen size. */
+.announcement > span { font-size: 12px; font-weight: 600; letter-spacing: .5px; }
+.mobile-nav > p { font-family: Arial, Helvetica, sans-serif; font-style: normal; font-size: 13px; font-weight: 600; line-height: 1.7; letter-spacing: .5px; max-width: 320px; }
+.footer-brand > .brand-tagline { font-size: 14px; font-weight: 600; line-height: 1.8; letter-spacing: .5px; color: #632b3c; }
+@media (max-width: 760px) { .announcement > span { font-size: 11px; letter-spacing: .3px; } }
+
+/* A separate carousel below the homepage product selection. */
+.hero-slider-viewport { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.home-hero > .hero-slider-viewport { position: absolute; inset: 0; }
+.hero-slider-viewport > .hero-slider-track { position: absolute; inset: 0; }
+.collection-showcase { padding-block: 64px; background: #eee6da; border-block: 1px solid #e0d7c9; }
+.collection-carousel { position: relative; background: var(--paper); }
+.collection-carousel .hero-slider-viewport { height: auto; aspect-ratio: 16 / 9; }
+.collection-carousel .hero-slider-controls { position: static; transform: none; justify-content: space-between; padding: 12px 18px; border: 1px solid #ddd0c0; border-top: 0; }
+.collection-carousel .hero-slider-dots button::after { background: #632b3c40; border-color: #632b3c55; box-shadow: none; }
+.collection-carousel .hero-slider-dots button[aria-pressed=true]::after { background: #632b3c; }
+.collection-slider-arrow { width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid #d4c4b4; background: transparent; color: #632b3c; font-size: 24px; }
+.collection-slider-arrow:hover { background: #eee6da; }
+.collection-carousel .hero-slider-controls button:focus-visible { outline: 2px solid #632b3c; border-radius: 0; }
+@media (max-width: 760px) {
+  .collection-showcase { padding-block: 48px; }
+  .collection-showcase .section-heading { display: block; }
+  .collection-showcase .section-heading > .text-link { display: inline-flex; margin-top: 18px; }
+  .collection-carousel .hero-slider-viewport { aspect-ratio: 4 / 3; }
+  .collection-carousel .hero-slider-controls { padding: 8px 10px; }
+}

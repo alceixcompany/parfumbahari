@@ -47,7 +47,7 @@ Görsel üretim yöntemi ve istemleri [görsel notlarında](docs/assets.md) bulu
 
 - Blog bağlantısı ana menüden kaldırılmıştır; mevcut `/haberler` sayfaları ve yönetimi korunur.
 - `logo-horizontal-v2.png` arka plansız yeni yatay logodur. Yanında ayrı yazı veya slogan gösterilmez. Üretim istemi `docs/assets.md` içindedir.
-- Hero üç slayt arasında otomatik kayar; dokunarak kaydırma ve altta ortalanmış üç nokta ile seçim desteklenir. Elle seçim/kaydırma otomatik geçişi durdurur; odakta, fare üzerindeyken ve azaltılmış hareket tercihinde otomatik geçiş yapılmaz.
+- Üst hero üç slayt arasında otomatik kayar; dokunarak kaydırma ve altta ortalanmış üç nokta ile seçim desteklenir. Ürün seçkisinin altındaki ayrı ikinci slider, Carolina Herrera dört şişeli seçkiyi, kadın çiftini ve erkek çiftini üç ayrı sahnede gösterir; kendine ait noktaları ve ileri/geri düğmeleri vardır. İki slider birbirinden bağımsız çalışır. Elle seçim/kaydırma otomatik geçişi durdurur; odakta, fare üzerindeyken ve azaltılmış hareket tercihinde otomatik geçiş yapılmaz.
 - Hakkımızda metni `src/data/about.ts` içindedir; ana sayfadaki marka hikâyesi aynı kaynağı kullanır.
 - Ürün kategorileri yalnızca Bay, Bayan ve Unisex’tir. Katalogda ve admin ürün düzenleyicisinde alt kategori veya parfüm markası alanı yoktur. Eski `erkek`, `kadin`, `unisex` kimlikleri ve URL’leri korunur; kategorisi olmayan eski ürünler adlarından eşleştirilir.
 - `/admin/kategoriler` üç sabit kategoriyi gösterir. Ürün düzenleyicisinden kategori seçilir; özel kategori koleksiyonuna istek atılmaz.
@@ -74,3 +74,5 @@ Doğrulama: `npm test`, `npm run test:rules`, `npm run lint`, `npm run build`, `
 `npm run migrate:catalogue -- --project <proje-id>` varsayılan olarak yalnızca değişiklik planı çıkarır. Yönetici kimliği yoksa sadece yayındaki Parfum Bahari ürünlerini okuyabilir. Mevcut Firebase CLI hesabını kullanmak için `--firebase-cli`, ADC için `--adc` kullanılabilir; hedef projeye zaten yetkili bir hesap gerekir. Araç hesap veya rol oluşturmaz.
 
 Planlar ve geri dönüş makbuzları Git dışında `artifacts/catalogue-migration/` altında, yalnızca kullanıcı tarafından okunabilir dosyalarda saklanır. İncelenen plan `--apply --plan <dosya>` ile tek atomik işlemde uygulanır; bu modda yetkili kimlik zorunludur. Ürün adları, mevcut URL’ler, görsel referansları ve yayın durumları korunur. Kategori adından kesin belirlenemeyen ürünler inceleme listesine bırakılır. Ayrıntılar `docs/catalogue-migration.md` içindedir.
+
+Markanın güncel sloganı `src/data/brand.ts` içindeki **PREMİUM KALİTE PREMİUM KOKULAR** metnidir; üst bant, mobil menü, alt bilgi, yönetim ekranları ve ana sayfa metadata alanları aynı kaynağı kullanır.
