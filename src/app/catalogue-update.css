@@ -1,8 +1,8 @@
 /* A single transparent logo image, with no adjacent text or slogan. */
 .brand-mark { gap: 0; line-height: 0; }
 .brand-mark .brand-logo { width: 260px; height: auto; object-fit: contain; flex-shrink: 0; border-radius: 0; }
-.admin-sidebar .brand-mark .brand-logo { width: 195px; filter: brightness(0) invert(1); }
-.admin-login-visual .brand-mark .brand-logo, .brand-mark-dark .brand-logo { filter: brightness(0) invert(1); }
+.site-header .brand-logo { filter: brightness(.62) saturate(1.1); }
+.admin-sidebar .brand-mark .brand-logo { width: 195px; }
 .site-footer .brand-mark .brand-logo { width: 260px; }
 
 /* Keep this public section independent from admin or inherited theme colours. */
@@ -13,7 +13,6 @@ main .discovery-banner h2 em { color: #e5cbbb; }
 main .discovery-banner p:not(.eyebrow) { color: #f1ded8; }
 main .discovery-banner .button-light { background: #f9f6ef; border-color: #f9f6ef; color: #632b3c; }
 main .discovery-banner .button-light:hover { background: #eee4d6; border-color: #eee4d6; color: #43212c; }
-main .discovery-banner .banner-flower { color: rgb(255 248 238 / 5%); }
 
 /* A horizontal, touch-friendly carousel with explicit playback controls. */
 .home-hero.hero-slider { aspect-ratio: 16 / 8; background: #392018; }

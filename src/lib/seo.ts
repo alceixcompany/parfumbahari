@@ -12,7 +12,7 @@ export const SEO_CONFIG = {
   keywords: ['Parfum Bahari', 'parfüm kataloğu', 'parfüm koleksiyonu', 'parfüm çeşitleri', 'eau de parfum'],
 };
 export function getBrandSchema() {
-  return { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE_URL}/#organization`, name: business.name, url: SITE_URL, logo: `${SITE_URL}/parfum-bahari/logo-horizontal-v2.png`, image: `${SITE_URL}${SEO_CONFIG.images.hero}`, description: SEO_CONFIG.fullDescription,
+  return { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE_URL}/#organization`, name: business.name, url: SITE_URL, logo: `${SITE_URL}/parfum-bahari/logo-gold.png`, image: `${SITE_URL}${SEO_CONFIG.images.hero}`, description: SEO_CONFIG.fullDescription,
     ...(business.phone ? { telephone: business.phone } : {}), ...(business.email ? { email: business.email } : {}), ...(business.instagram ? { sameAs: [business.instagram] } : {}) };
 }
 export function getBreadcrumbSchema(items: { name: string; path: string }[]) {

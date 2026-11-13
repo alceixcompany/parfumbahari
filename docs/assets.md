@@ -1,6 +1,16 @@
 # Parfum Bahari — görsel varlıklar
 
-## Güncel logo — 3 Kasım 2026
+## Güncel altın logo — 13 Kasım 2026
+
+`public/parfum-bahari/logo-gold.png`, kullanıcının sağladığı “Parfüm Baharı / Kokunla İz Bırak” logosunun siyah arka planı kaldırılmış PNG sürümüdür. Yerleşik imagegen aracı, **background-extraction** düzenleme modunda ve `transparent_background: true` ile kullanıldı. Seçilen çıktı 2179 × 721 piksel, gerçek alfa kanallıdır ve değiştirilmeden projeye kopyalandı. Başlık, alt bilgi, yönetim ekranları ve Organization yapılandırılmış verisi bu dosyayı kullanır. Yönetim ekranlarındaki beyaza çevirme filtresi kaldırılarak altın renk korundu. Genel site sloganı değiştirilmedi.
+
+Navbar sürümünde aynı şeffaf dosya, yalnızca `.site-header .brand-logo` kapsamındaki `brightness(.62) saturate(1.1)` CSS filtresiyle daha koyu altın/bronz tonda gösterilir. Harfler, ince çizgiler ve alfa kanalı korunur; alt bilgi ve yönetim ekranları özgün altın tonunu kullanır. Bu ton ayarı için yeni görsel üretilmedi.
+
+Son düzenleme istemi:
+
+> BACKGROUND EXTRACTION ONLY. Use the supplied image exactly as the source artwork, not as a design reference. Remove the pure black background to actual transparent alpha. Preserve the exact original warm pale champagne-gold color and subtle smooth gradient of all original strokes. Absolutely NO added embossing, NO bevel, NO 3D edge, NO outline, NO black outline, NO red or yellow chromatic fringe, NO new metallic texture or extra highlights. The original is smooth elegant thin calligraphic gold lettering and flat softly shaded gold lines. Do NOT redraw or reinterpret. Keep exactly the original 'PARFÜM BAHARI' wordmark, 'KOKUNLA İZ BIRAK' tagline, perfume silhouette, gold horizontal rules, arc and petal. Every black pixel must become transparent, including letter counters and the cap opening. Keep all existing lettering and symbols unchanged. Tight outer crop with small even transparent padding. Output only the original gold logo on true transparency.
+
+## Önceki PB logosu — 3 Kasım 2026
 
 Logo, okunaklı Arial yazı ve bordo PB ambleminden oluşan SVG olarak yenilendi. Sitede ortak `BrandMark` bileşeni; marka sayfasında `logo-wordmark.svg`; yapılandırılmış veride `logo-wordmark.png`; manifest ve tarayıcı simgesinde `icon-pb.png` / `src/app/icon.png` kullanılır. SVG kaynaklar `public/parfum-bahari/` içindedir. PNG kopyalar Sharp ile SVG kaynaklarından oluşturuldu. Bu logo için görsel üretim aracı kullanılmadı.
 

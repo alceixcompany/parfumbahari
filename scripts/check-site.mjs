@@ -4,7 +4,7 @@ const base = process.argv.find(arg => /^https?:/.test(arg)) || 'http://localhost
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url)));
 const starter = JSON.parse(readFileSync(new URL('../src/data/starter-content.json', import.meta.url)));
 const names = new Set();
-const images = new Set(['/parfum-bahari/hero.webp', '/parfum-bahari/hero-branded.webp', '/parfum-bahari/hero-trio.webp', '/parfum-bahari/hero-herrera-collection.webp', '/parfum-bahari/hero-herrera-women.webp', '/parfum-bahari/hero-herrera-men.webp', '/parfum-bahari/story-naxos.png', '/parfum-bahari/story-erba-pura.png', '/parfum-bahari/logo-horizontal-v2.png']);
+const images = new Set(['/parfum-bahari/hero.webp', '/parfum-bahari/hero-branded.webp', '/parfum-bahari/hero-trio.webp', '/parfum-bahari/hero-herrera-collection.webp', '/parfum-bahari/hero-herrera-women.webp', '/parfum-bahari/hero-herrera-men.webp', '/parfum-bahari/story-naxos.png', '/parfum-bahari/story-erba-pura.png', '/parfum-bahari/logo-gold.png']);
 for (const product of products) {
   assert(!names.has(product.slug), `Duplicate product slug ${product.slug}`); names.add(product.slug);
   assert(product.images.length > 0 && product.images.includes(product.image)); images.add(product.image);
