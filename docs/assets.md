@@ -85,6 +85,10 @@ Tam istem:
 
 `public/parfum-bahari/story-naxos.png` ve `public/parfum-bahari/story-erba-pura.png`, kullanıcının verdiği iki fotoğrafın değiştirilmeden kopyalanmış hâlidir. Ana sayfa ve Hakkımızda sayfasındaki ortak hikâye bölümünde eski Rose de Soie / Santal Noir görsellerinin yerini alır.
 
+## Slider yerleşimi — 13 Kasım 2026
+
+Ana sayfanın tek sliderı `hero-branded.webp` ile başlar; ardından `hero-herrera-collection.webp`, `hero-herrera-women.webp` ve `hero-herrera-men.webp` gelir. Kullanıcının gösterdiği `hero.webp` ve `hero-trio.webp` slaytları çıkarıldı; alttaki ikinci slider bölümü kaldırıldı. Görsel üzerindeki başlıklar, bağlantı yazıları ve karartma katmanı kaldırıldı; erişilebilir bağlantı etiketleri ve slayt açıklamaları korundu. Yeni görsel üretilmedi.
+
 ## Dört şişeli Carolina Herrera slaytı — 11 Kasım 2026
 
 Dosya: `public/parfum-bahari/hero-herrera-collection.webp`. Yerleşik imagegen aracıyla oluşturuldu; `hero-branded.webp` sahne ve ışık referansı, kullanıcının gönderdiği pembe/lacivert topuklu ayakkabı ve siyah/mavi şimşek biçimli dört şişe nesne referansı olarak kullanıldı. Şişeler tek sahnede yan yana durur. Sharp yalnızca WebP dönüşümü için kullanıldı. Ana sayfada ürün seçkisinin altına eklenen bağımsız ikinci karuselin ilk görselidir. Üst hero üç slaytlı olarak korunur. Slogan resme basılmadı; okunaklı HTML metni olarak gösterilir.
